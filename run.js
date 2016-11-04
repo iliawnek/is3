@@ -144,6 +144,7 @@ tasks.set('start', () => {
               require('connect-history-api-fallback')(),
             ],
           },
+          open: false,
         }, resolve);
       }
     });
