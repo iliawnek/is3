@@ -9,9 +9,8 @@
  */
 
 import React from 'react';
-import Link from '../Link';
+import Button from '../Button';
 import colors from '../../styles/colors';
-
 class Header extends React.Component {
 
   render() {
@@ -36,9 +35,9 @@ class Header extends React.Component {
     return (
       <div style={styles.header}>
         <div style={styles.container}>
-          <Link style={styles.webappName} to="/">
+          <Button to="/">
             WEBAPP NAME
-          </Link>
+          </Button>
         </div>
       </div>
     );
