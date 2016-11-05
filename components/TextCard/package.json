@@ -1,0 +1,6 @@
+{
+  "name": "TextCard",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./TextCard.js"
+}
