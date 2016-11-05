@@ -90,12 +90,14 @@ class Header extends React.Component {
 
     return (
       <div style={styles.header}>
-        {projectsButton}
-        <div style={styles.container}>
+        <div>
+          {projectsButton}
           <Button to="/">WEBAPP NAME</Button>
-          <UserButton/>
         </div>
-        {activityButton}
+        <div>
+          <UserButton/>
+          {activityButton}
+        </div>
       </div>
     );
   }
