@@ -68,7 +68,7 @@ export default class ProjectsList extends Component {
           selected={projectId === currentProjectId}
           onClick={setCurrentProjectId.bind(this, projectId)}
         >
-          {projects[projectId].name}
+          {projects[projectId].name.toUpperCase()}
         </Button>
       )
     });
