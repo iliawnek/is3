@@ -10,21 +10,13 @@
 
 import React, {PropTypes} from 'react';
 import Header from './Header';
-import {connect} from 'react-redux';
-import {getUser} from '../../core/reducers/auth';
 
-@connect(null, {getUser})
 class Layout extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
-    getUser: PropTypes.func,
     children: PropTypes.node,
   };
-
-  componentWillMount() {
-    this.props.getUser();
-  }
 
   render() {
     const {children} = this.props;
