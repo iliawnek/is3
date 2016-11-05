@@ -13,14 +13,19 @@ import {connect} from 'react-redux';
 import Layout from '../../components/Layout';
 import ProjectsList from '../../components/ProjectsList';
 import ActivityLog from '../../components/ActivityLog';
+import ProjectPane from '../../components/ProjectPane';
 import {getUser} from '../../core/reducers/auth';
 import {getProjects} from '../../core/reducers/projects';
+import {setCurrentProjectId} from '../../core/reducers/ui';
 
 @connect((state) => ({
   uid: state.auth.user && state.auth.user.uid,
+  projects: state.projects,
+  currentProjectId: state.ui.currentProjectId,
 }), {
   getUser,
   getProjects,
+  setCurrentProjectId,
 })
 class HomePage extends React.Component {
 
@@ -28,6 +33,8 @@ class HomePage extends React.Component {
     uid: PropTypes.string,
     getUser: PropTypes.func,
     getProjects: PropTypes.func,
+    currentProjectId: PropTypes.string,
+    setCurrentProjectId: PropTypes.func,
   };
 
   componentWillMount() {
@@ -35,8 +42,16 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.uid && nextProps.uid !== this.props.uid) {
-      this.props.getProjects(nextProps.uid);
+    const {uid: thisUid} = this.props;
+    const {uid: nextUid, projects, currentProjectId} = nextProps;
+    // load projects of current user
+    if (nextUid && nextUid !== thisUid) {
+      this.props.getProjects(nextUid);
+    }
+    // initially select arbitrary project
+    if (!currentProjectId && projects !== {}) {
+      const firstProject = Object.keys(projects)[0];
+      this.props.setCurrentProjectId(firstProject);
     }
   }
 
@@ -44,6 +59,7 @@ class HomePage extends React.Component {
     return (
       <Layout>
         <ProjectsList/>
+        <ProjectPane/>
         <ActivityLog/>
       </Layout>
     );

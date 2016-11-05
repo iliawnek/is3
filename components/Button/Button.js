@@ -7,6 +7,7 @@ export default class Button extends Component {
     children: PropTypes.node,
     style: PropTypes.object,
     to: PropTypes.string,
+    selected: PropTypes.bool,
   };
 
   state = {
@@ -18,7 +19,7 @@ export default class Button extends Component {
 
   render() {
     const {hovering} = this.state;
-    const {style, children, to, ...otherProps} = this.props;
+    const {style, children, to, selected, ...otherProps} = this.props;
 
     const styles = {
       button: {
@@ -39,7 +40,7 @@ export default class Button extends Component {
         height: '100%',
         top: 0,
         left: 0,
-        backgroundColor: hovering ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+        backgroundColor: hovering || selected ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
         transition: 'background-color 0.2s ease-in-out',
       },
     };

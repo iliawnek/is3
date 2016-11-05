@@ -2,19 +2,24 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Drawer from '../Drawer';
 import Button from '../Button';
+import {setCurrentProjectId} from '../../core/reducers/ui';
 
 @connect(state => ({
   projectsListOpen: state.ui.projectsListOpen,
   projects: state.projects,
-}), {})
+  currentProjectId: state.ui.currentProjectId,
+}), {
+  setCurrentProjectId,
+})
 
 export default class ProjectsList extends Component {
   static propTypes = {
     projectsListOpen: PropTypes.bool,
+    setCurrentProjectId: PropTypes.func,
   };
 
   render() {
-    const {projectsListOpen, projects} = this.props;
+    const {projectsListOpen, projects, currentProjectId, setCurrentProjectId} = this.props;
 
     const styles = {
       drawer: {
@@ -57,7 +62,12 @@ export default class ProjectsList extends Component {
 
     const projectsList = Object.keys(projects).map(projectId => {
       return (
-        <Button style={styles.projectsListButton} key={projectId}>
+        <Button
+          style={styles.projectsListButton}
+          key={projectId}
+          selected={projectId === currentProjectId}
+          onClick={setCurrentProjectId.bind(this, projectId)}
+        >
           {projects[projectId].name}
         </Button>
       )
