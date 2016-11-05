@@ -30,9 +30,22 @@ export default class ProjectPane extends Component {
   render() {
     const {currentProject} = this.state;
 
+    const styles = {
+      projectPane: {
+        maxWidth: 934,
+        width: '100%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        padding: 50,
+      },
+      projectName: {
+        fontSize: 32,
+      }
+    };
+
     return (
-      <div>
-        {currentProject && currentProject.name}
+      <div style={styles.projectPane}>
+        <span style={styles.projectName}>{currentProject && currentProject.name.toUpperCase()}</span>
       </div>
     );
   }
