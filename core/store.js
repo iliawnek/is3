@@ -8,18 +8,16 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { createStore } from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import reducer from './reducers/reducer';
 
 // Centralized application state
 // For more information visit http://redux.js.org/
-const store = createStore((state, action) => {
-  // TODO: Add action handlers (aka "reducers")
-  switch (action) {
-    case 'COUNT':
-      return { ...state, count: (state.count || 0) + 1 };
-    default:
-      return state;
-  }
-});
+const store = createStore(
+  reducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  applyMiddleware(thunk),
+);
 
 export default store;

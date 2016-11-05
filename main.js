@@ -15,6 +15,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import FastClick from 'fastclick';
 import { Provider } from 'react-redux';
+import Firebase from 'firebase';
 
 import store from './core/store';
 import router from './core/router';
@@ -22,6 +23,15 @@ import history from './core/history';
 
 let routes = require('./routes.json'); // Loaded with utils/routes-loader.js
 const container = document.getElementById('container');
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCVfQJ-oUTqIQApN6eS9vGwiDG7zEGaQDg",
+  authDomain: "interactive-systems-3.firebaseapp.com",
+  databaseURL: "https://interactive-systems-3.firebaseio.com",
+  storageBucket: "interactive-systems-3.appspot.com",
+  messagingSenderId: "236081397933"
+};
+Firebase.initializeApp(firebaseConfig);
 
 function renderComponent(component) {
   ReactDOM.render(<Provider store={store}>{component}</Provider>, container);

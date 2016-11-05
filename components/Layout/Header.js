@@ -8,10 +8,24 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import Button from '../Button';
+import UserButton from './UserButton';
 import colors from '../../styles/colors';
+import {signIn, signOut} from '../../core/reducers/auth';
+
+@connect(store => ({
+
+}), {
+  signIn,
+  signOut,
+})
 class Header extends React.Component {
+  static propTypes = {
+    signIn: PropTypes.func,
+    signOut: PropTypes.func,
+  };
 
   render() {
     const styles = {
@@ -35,9 +49,8 @@ class Header extends React.Component {
     return (
       <div style={styles.header}>
         <div style={styles.container}>
-          <Button to="/">
-            WEBAPP NAME
-          </Button>
+          <Button to="/">WEBAPP NAME</Button>
+          <UserButton/>
         </div>
       </div>
     );
