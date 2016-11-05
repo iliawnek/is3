@@ -10,6 +10,8 @@
 
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
+import ProjectsList from '../../components/ProjectsList';
+import ActivityLog from '../../components/ActivityLog';
 
 class HomePage extends React.Component {
 
@@ -19,7 +21,10 @@ class HomePage extends React.Component {
 
   render() {
     return (
-      <Layout/>
+      <Layout>
+        <ProjectsList/>
+        <ActivityLog/>
+      </Layout>
     );
   }
 

@@ -19,6 +19,7 @@ class Layout extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     getUser: PropTypes.func,
+    children: PropTypes.node,
   };
 
   componentWillMount() {
@@ -26,11 +27,20 @@ class Layout extends React.Component {
   }
 
   render() {
+    const {children} = this.props;
+
+    const styles = {
+      layout: {
+        flexDirection: 'column',
+        width: '100vw',
+      },
+    };
+
     return (
-      <div>
+      <div style={styles.layout}>
         <Header/>
         <main>
-          <div {...this.props}/>
+          {children}
         </main>
       </div>
     );
