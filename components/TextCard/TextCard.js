@@ -3,12 +3,11 @@ import Card from '../Card';
 
 export default class TextCard extends Component {
   static propTypes = {
-    title: PropTypes.string,
-    text: PropTypes.string,
+    card: PropTypes.object,
   };
 
   render() {
-    const {title, text, ...otherProps} = this.props;
+    const {card, ...otherProps} = this.props;
 
     const styles = {
       card: {
@@ -26,8 +25,8 @@ export default class TextCard extends Component {
 
     return (
       <Card style={styles.card} {...otherProps}>
-        <div style={styles.title}>{title}</div>
-        <div style={styles.text}>{text}</div>
+        <div style={styles.title}>{card.title}</div>
+        <div style={styles.text}>{card.text}</div>
       </Card>
     );
   }
