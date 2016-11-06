@@ -23,9 +23,11 @@ export default class ProjectsList extends Component {
 
     const styles = {
       drawer: {
+        display: 'flex',
         flexDirection: 'column',
       },
       header: {
+        display: 'flex',
         justifyContent: 'space-between',
         height: 60,
         width: '100%',
@@ -42,6 +44,7 @@ export default class ProjectsList extends Component {
         fill: 'black',
       },
       projectsListButton: {
+        display: 'flex',
         width: '100%',
         backgroundColor: 'transparent',
         color: '#444',

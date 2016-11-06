@@ -35,21 +35,24 @@ export default class ProjectPane extends Component {
         width: '100%',
       },
       projectPane: {
+        display: 'flex',
         maxWidth: 950,
         width: '100%',
         marginLeft: 'auto',
         marginRight: 'auto',
         padding: 50,
         flexDirection: 'column',
+        boxSizing: 'border-box',
       },
       projectName: {
         fontSize: 32,
       },
-      cardContainer: {
+      card: {
         width: 400,
         marginTop: 50,
       },
       cardGrid: {
+        display: 'flex',
         flexDirection: 'column',
       },
     };
@@ -58,9 +61,7 @@ export default class ProjectPane extends Component {
       currentProject && Object.keys(currentProject.cards).map((cardId) => {
         const card = currentProject.cards[cardId];
         return (
-          <div key={cardId} style={styles.cardContainer}>
-            <TextCard title={card.title} text={card.text || ''}/>
-          </div>
+          <TextCard key={cardId} style={styles.card} card={card}/>
         );
       })
     );

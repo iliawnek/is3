@@ -23,6 +23,8 @@ export default class Button extends Component {
 
     const styles = {
       button: {
+        display: 'flex',
+        boxSizing: 'border-box',
         position: 'relative',
         justifyContent: 'center',
         alignItems: 'center',

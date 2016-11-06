@@ -52,16 +52,14 @@ class Header extends React.Component {
 
     const styles = {
       header: {
+        display: 'flex',
         height: 60,
         width: '100%',
         backgroundColor: colors.primary,
         justifyContent: 'space-between',
       },
-      container: {
-        maxWidth: 934,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+      headerSection: {
+        display: 'flex',
       },
       webappName: {
         color: 'white',
@@ -90,11 +88,11 @@ class Header extends React.Component {
 
     return (
       <div style={styles.header}>
-        <div>
+        <div style={styles.headerSection}>
           {projectsButton}
           <Button to="/">WEBAPP NAME</Button>
         </div>
-        <div>
+        <div style={styles.headerSection}>
           <UserButton/>
           {activityButton}
         </div>

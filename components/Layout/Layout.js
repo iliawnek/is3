@@ -23,8 +23,9 @@ class Layout extends React.Component {
 
     const styles = {
       layout: {
+        display: 'flex',
         flexDirection: 'column',
-        width: '100vw',
+        width: '100%',
       },
     };
 
