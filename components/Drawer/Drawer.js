@@ -24,7 +24,7 @@ class Drawer extends Component {
       container: {
         position: 'fixed',
         display: 'flex',
-        width: '100vh',
+        width: '100vw',
         height: '100vh',
         zIndex: 99,
       },
