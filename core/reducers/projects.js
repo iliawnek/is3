@@ -20,7 +20,7 @@ function getProject(projectId) {
       return dispatch({
         type: GET_PROJECT,
         projectId,
-        data: data.val(),
+        data: {...data.val(), id: projectId},
       })
     });
   }
@@ -34,7 +34,7 @@ function getCards(projectId) {
         type: GET_CARD,
         projectId,
         cardId: data.key,
-        data: data.val(),
+        data: {...data.val(), projectId, id: data.key},
       })
     });
   };
