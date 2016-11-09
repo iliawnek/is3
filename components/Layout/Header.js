@@ -53,7 +53,9 @@ class Header extends React.Component {
     const styles = {
       header: {
         display: 'flex',
+        position: 'fixed',
         height: 60,
+        zIndex: 200,
         width: '100%',
         backgroundColor: colors.primary,
         justifyContent: 'space-between',

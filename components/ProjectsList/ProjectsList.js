@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Drawer from '../Drawer';
 import Button from '../Button';
-import {setCurrentProjectId} from '../../core/reducers/ui';
+import {setCurrentProjectId, closeProjectsList} from '../../core/reducers/ui';
 
 @connect(state => ({
   projectsListOpen: state.ui.projectsListOpen,
@@ -10,12 +10,14 @@ import {setCurrentProjectId} from '../../core/reducers/ui';
   currentProjectId: state.ui.currentProjectId,
 }), {
   setCurrentProjectId,
+  closeProjectsList,
 })
 
 export default class ProjectsList extends Component {
   static propTypes = {
     projectsListOpen: PropTypes.bool,
     setCurrentProjectId: PropTypes.func,
+    closeProjectsList: PropTypes.func,
   };
 
   render() {
@@ -81,6 +83,7 @@ export default class ProjectsList extends Component {
         open={projectsListOpen}
         style={styles.drawer}
         side="left"
+        onClickOutside={this.props.closeProjectsList}
       >
         <div style={styles.header}>
           <span style={styles.title}>PROJECTS</span>

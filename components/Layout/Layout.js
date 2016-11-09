@@ -27,12 +27,15 @@ class Layout extends React.Component {
         flexDirection: 'column',
         width: '100%',
       },
+      main: {
+        marginTop: 60,
+      },
     };
 
     return (
       <div style={styles.layout}>
         <Header/>
-        <main>
+        <main style={styles.main}>
           {children}
         </main>
       </div>
