@@ -32,6 +32,8 @@ export default class TextCard extends Component {
     const styles = {
       card: {
         flexDirection: 'column',
+        width: 420,
+        boxSizing: 'border-box',
       },
       title: {
         fontSize: 24,
@@ -40,7 +42,7 @@ export default class TextCard extends Component {
         fontSize: 16,
         color: '#444',
         marginTop: 24,
-        height: 400,
+        height: 500,
       },
     };
 

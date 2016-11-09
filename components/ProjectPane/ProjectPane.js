@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {SpringGrid, layout, measureItems} from 'react-stonecutter';
+import {SpringGrid, makeResponsive} from 'react-stonecutter';
 import TextCard from '../TextCard';
 
 @connect(state => ({
@@ -36,49 +36,44 @@ export default class ProjectPane extends Component {
       },
       projectPane: {
         display: 'flex',
-        maxWidth: 950,
+        maxWidth: 890,
         width: '100%',
         marginLeft: 'auto',
         marginRight: 'auto',
         padding: 50,
         flexDirection: 'column',
-        boxSizing: 'border-box',
       },
       projectName: {
         fontSize: 32,
       },
-      card: {
-        width: 400,
-        marginTop: 50,
-      },
-      cardGrid: {
-        display: 'flex',
-        flexDirection: 'column',
-      },
     };
 
     const cards = (
-      currentProject && Object.keys(currentProject.cards).map((cardId) => {
-        const card = currentProject.cards[cardId];
+      currentProject && Object.values(currentProject.cards).map((card) => {
         return (
-          <TextCard key={cardId} style={styles.card} card={card}/>
+          <div key={card.id}>
+            <TextCard card={card}/>
+          </div>
         );
       })
     );
 
-    const Grid = measureItems(SpringGrid);
+    const Grid = makeResponsive(SpringGrid, {
+      maxWidth: 990,
+      minPadding: 100,
+    });
 
     const cardGrid = (
       <div style={styles.cardGrid}>
         <Grid
-          itemHeight={400}
+          itemHeight={600}
           component="div"
           columns={2}
-          columnWidth={400}
+          columnWidth={420}
           gutterWidth={50}
           gutterHeight={50}
           duration={800}
-          easing="ease-out"
+          springConfig={{stiffness: 170, damping: 26}}
         >
           {cards}
         </Grid>
@@ -92,9 +87,7 @@ export default class ProjectPane extends Component {
         <div style={styles.header}>
           <div style={styles.projectName}>{title}</div>
         </div>
-        <div style={styles.cardGrid}>
-          {cards}
-        </div>
+        {cardGrid}
       </div>
     );
   }
