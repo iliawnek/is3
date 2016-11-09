@@ -31,16 +31,18 @@ export default class ProjectsList extends Component {
       header: {
         display: 'flex',
         justifyContent: 'space-between',
-        height: 60,
+        height: 80,
         width: '100%',
         alignItems: 'center',
       },
       title: {
-        fontSize: 24,
+        fontSize: 32,
         marginLeft: 24,
       },
       createButton: {
         backgroundColor: 'transparent',
+        height: 80,
+        width: 80,
       },
       createIcon: {
         fill: 'black',
