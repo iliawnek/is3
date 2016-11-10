@@ -43,6 +43,9 @@ export default class ProjectPane extends Component {
       projectName: {
         fontSize: 32,
       },
+      cardGrid: {
+        marginTop: 50,
+      },
     };
 
     const cards = (
