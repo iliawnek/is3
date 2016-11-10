@@ -30,21 +30,17 @@ export default class ProjectPane extends Component {
     const styles = {
       header: {
         width: '100%',
+        marginBottom: 50,
       },
       projectPane: {
         display: 'flex',
-        maxWidth: 890,
-        width: '100%',
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        boxSizing: 'border-box',
         padding: 50,
         flexDirection: 'column',
+        alignItems: 'center',
       },
       projectName: {
         fontSize: 32,
-      },
-      cardGrid: {
-        marginTop: 50,
       },
     };
 
@@ -59,17 +55,22 @@ export default class ProjectPane extends Component {
     );
 
     const Grid = makeResponsive(SpringGrid, {
-      maxWidth: 990,
+      maxWidth: 1650,
       minPadding: 100,
     });
 
+    const title = currentProject ? currentProject.name.toUpperCase() : '';
+
     const cardGrid = (
-      <div style={styles.cardGrid}>
+      <div>
+        <div style={styles.header}>
+          <div style={styles.projectName}>{title}</div>
+        </div>
         <Grid
-          itemHeight={600}
+          itemHeight={400}
           component="div"
-          columns={2}
-          columnWidth={420}
+          columns={4}
+          columnWidth={350}
           gutterWidth={50}
           gutterHeight={50}
           duration={800}
@@ -80,13 +81,8 @@ export default class ProjectPane extends Component {
       </div>
     );
 
-    const title = currentProject ? currentProject.name.toUpperCase() : '';
-
     return (
       <div style={styles.projectPane}>
-        <div style={styles.header}>
-          <div style={styles.projectName}>{title}</div>
-        </div>
         {cardGrid}
       </div>
     );

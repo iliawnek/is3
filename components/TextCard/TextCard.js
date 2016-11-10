@@ -22,7 +22,6 @@ export default class TextCard extends Component {
     // Create Firepad (with rich text toolbar and shortcuts enabled).
     const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
       richTextShortcuts: true,
-      richTextToolbar: true,
       userId: user.uid,
       defaultText: 'Start typing here...'
     });
@@ -36,7 +35,7 @@ export default class TextCard extends Component {
     const styles = {
       card: {
         flexDirection: 'column',
-        width: 420,
+        width: 350,
         boxSizing: 'border-box',
       },
       title: {
@@ -46,7 +45,7 @@ export default class TextCard extends Component {
         fontSize: 16,
         color: '#444',
         marginTop: 24,
-        height: 500,
+        height: 250,
       },
     };
 
