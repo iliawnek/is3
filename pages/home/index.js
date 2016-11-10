@@ -19,7 +19,7 @@ import {getProjects} from '../../core/reducers/projects';
 import {setCurrentProjectId} from '../../core/reducers/ui';
 
 @connect((state) => ({
-  uid: state.auth.user && state.auth.user.uid,
+  user: state.auth.user,
   projects: state.projects,
   currentProjectId: state.ui.currentProjectId,
 }), {
@@ -30,7 +30,7 @@ import {setCurrentProjectId} from '../../core/reducers/ui';
 class HomePage extends React.Component {
 
   static propTypes = {
-    uid: PropTypes.string,
+    user: PropTypes.object,
     getUser: PropTypes.func,
     getProjects: PropTypes.func,
     currentProjectId: PropTypes.string,
@@ -38,18 +38,20 @@ class HomePage extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getUser();
+    if (!this.props.user) {
+      this.props.getUser();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const {uid: thisUid} = this.props;
-    const {uid: nextUid, projects, currentProjectId} = nextProps;
+    const {user: thisUser} = this.props;
+    const {user: nextUser, projects, currentProjectId} = nextProps;
     // load projects of current user
-    if (nextUid && nextUid !== thisUid) {
-      this.props.getProjects(nextUid);
+    if (nextUser && (!thisUser || nextUser.uid !== thisUser.uid)) {
+      this.props.getProjects(nextUser.uid);
     }
     // initially select arbitrary project
-    if (!currentProjectId && projects !== {}) {
+    if (!currentProjectId && Object.keys(projects).length !== 0) {
       const firstProject = Object.keys(projects)[0];
       this.props.setCurrentProjectId(firstProject);
     }

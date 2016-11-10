@@ -29,7 +29,7 @@ export default class UserButton extends Component {
       <Button
         onClick={this.props.signIn}
       >
-        ENTER WITH GOOGLE
+        GOOGLE LOGIN
       </Button>
     );
 

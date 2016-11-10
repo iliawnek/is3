@@ -18,13 +18,10 @@ export default class ProjectPane extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const {currentProjectId: thisCurrentProjectId} = this.props;
-    const {currentProjectId: nextCurrentProjectId, projects} = nextProps;
-    if (projects && nextCurrentProjectId && nextCurrentProjectId !== thisCurrentProjectId) {
-      this.setState({
-        currentProject: projects[nextCurrentProjectId],
-      });
-    }
+    const {currentProjectId, projects} = nextProps;
+    this.setState({
+      currentProject: projects && projects[currentProjectId],
+    });
   }
 
   render() {

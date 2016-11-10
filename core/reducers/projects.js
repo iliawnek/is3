@@ -44,7 +44,7 @@ const initialState = {
 
 };
 
-export default function ui(state = initialState, action = {}) {
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case GET_PROJECT:
       return {
