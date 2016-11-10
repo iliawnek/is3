@@ -1,14 +1,17 @@
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
 import Card from '../Card';
 import Firebase from 'firebase';
 
+@connect(state => ({user: state.auth.user}))
 export default class TextCard extends Component {
   static propTypes = {
     card: PropTypes.object,
+    user: PropTypes.object,
   };
 
   componentDidMount() {
-    const {card} = this.props;
+    const {card, user} = this.props;
 
     // Get Firebase Database reference.
     const firepadRef = Firebase.database().ref(`cards/${card.projectId}/${card.id}/firepad`);
@@ -20,6 +23,7 @@ export default class TextCard extends Component {
     const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
       richTextShortcuts: true,
       richTextToolbar: true,
+      userId: user.uid,
       defaultText: 'Start typing here...'
     });
   }
