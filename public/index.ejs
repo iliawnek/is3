@@ -14,16 +14,30 @@
 
     <!-- CodeMirror -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
+    <script src="https://codemirror.net/addon/display/placeholder.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css"/>
 
     <!-- Firepad -->
-    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css"/>
     <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css"/>
     <style>
       body {
         margin: 0;
         font-family: Montserrat, sans-serif;
         background-color: #EEE;
+      }
+      .CodeMirror {
+        font-family: Montserrat, sans-serif !important;
+        color: #444 !important;
+      }
+      .CodeMirror-empty {
+        color: #CCC !important;
+      }
+      .Firepad-title {
+        font-size: 24px !important;
+      }
+      .Firepad-text {
+        font-size: 14px !important;
       }
       .powered-by-firepad {
         display: none;

@@ -13,21 +13,22 @@ export default class TextCard extends Component {
   componentDidMount() {
     const {card, user} = this.props;
 
-    // Get Firebase Database reference.
-    const firepadRef = Firebase.database().ref(`cards/${card.projectId}/${card.id}/firepad`);
+    const titleRef = Firebase.database().ref(`cards/${card.projectId}/${card.id}/title`);
+    const titleCodeMirror = CodeMirror(this.titleDiv, {lineWrapping: true, viewportMargin: Infinity, placeholder: "Text card title"});
+    Firepad.fromCodeMirror(titleRef, titleCodeMirror, {
+      userId: user.uid,
+    });
 
-    // Create CodeMirror (with lineWrapping on).
-    const codeMirror = CodeMirror(this.textDiv, {lineWrapping: true});
-
-    // Create Firepad (with rich text toolbar and shortcuts enabled).
-    const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+    const textRef = Firebase.database().ref(`cards/${card.projectId}/${card.id}/text`);
+    const textCodeMirror = CodeMirror(this.textDiv, {lineWrapping: true, viewportMargin: Infinity, placeholder: "Start typing here..."});
+    Firepad.fromCodeMirror(textRef, textCodeMirror, {
       richTextShortcuts: true,
       userId: user.uid,
-      defaultText: 'Start typing here...'
     });
   }
 
   textDiv;
+  titleDiv;
 
   render() {
     const {card, ...otherProps} = this.props;
@@ -40,10 +41,9 @@ export default class TextCard extends Component {
       },
       title: {
         fontSize: 24,
+        height: 36,
       },
       text: {
-        fontSize: 16,
-        color: '#444',
         marginTop: 24,
         height: 250,
       },
@@ -51,9 +51,11 @@ export default class TextCard extends Component {
 
     return (
       <Card style={styles.card} {...otherProps}>
-        <div style={styles.title}>{card.title}</div>
-        <div style={styles.text} ref={(text) => {
-          this.textDiv = text;
+        <div style={styles.title} className="Firepad-title" ref={(div) => {
+          this.titleDiv = div;
+        }}/>
+        <div style={styles.text} className="Firepad-text" ref={(div) => {
+          this.textDiv = div;
         }}/>
       </Card>
     );
