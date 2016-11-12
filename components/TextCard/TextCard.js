@@ -31,7 +31,7 @@ export default class TextCard extends Component {
   titleDiv;
 
   render() {
-    const {card, ...otherProps} = this.props;
+    const {...otherProps} = this.props;
 
     const styles = {
       card: {
