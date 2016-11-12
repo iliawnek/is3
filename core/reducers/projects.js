@@ -40,6 +40,13 @@ function getCards(projectId) {
   };
 }
 
+export function createTextCard(projectId) {
+  const ref = Firebase.database().ref(`cards/${projectId}`);
+  ref.push({
+    type: 'text',
+  });
+}
+
 const initialState = {
 
 };

@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {SpringGrid, makeResponsive} from 'react-stonecutter';
 import TextCard from '../TextCard';
+import NewCardPlaceholder from '../NewCardPlaceholder';
 
 @connect(state => ({
   projects: state.projects,
@@ -53,6 +54,16 @@ export default class ProjectPane extends Component {
         );
       })
     );
+
+    if (cards) {
+      cards.push(
+        <div key={currentProject.id}>
+          <NewCardPlaceholder
+            projectId={currentProject.id}
+          />
+        </div>
+      );
+    }
 
     const Grid = makeResponsive(SpringGrid, {
       maxWidth: 1650,
