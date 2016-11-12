@@ -45,7 +45,7 @@ export default class TextCard extends Component {
       },
       text: {
         marginTop: 24,
-        height: 250,
+        height: 242,
       },
     };
 

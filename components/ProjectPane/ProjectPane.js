@@ -67,7 +67,7 @@ export default class ProjectPane extends Component {
           <div style={styles.projectName}>{title}</div>
         </div>
         <Grid
-          itemHeight={400}
+          itemHeight={350}
           component="div"
           columns={4}
           columnWidth={350}
