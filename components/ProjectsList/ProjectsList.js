@@ -3,8 +3,10 @@ import {connect} from 'react-redux';
 import Drawer from '../Drawer';
 import Button from '../Button';
 import {setCurrentProjectId, closeProjectsList} from '../../core/reducers/ui';
+import {createProject} from '../../core/reducers/projects';
 
 @connect(state => ({
+  uid: state.auth.user && state.auth.user.uid,
   projectsListOpen: state.ui.projectsListOpen,
   projects: state.projects,
   currentProjectId: state.ui.currentProjectId,
@@ -18,6 +20,11 @@ export default class ProjectsList extends Component {
     projectsListOpen: PropTypes.bool,
     setCurrentProjectId: PropTypes.func,
     closeProjectsList: PropTypes.func,
+    uid: PropTypes.string,
+  };
+
+  handleCreateProject = () => {
+    createProject(this.props.uid);
   };
 
   render() {
@@ -53,12 +60,13 @@ export default class ProjectsList extends Component {
         backgroundColor: 'transparent',
         color: '#444',
         justifyContent: 'space-between',
+        textTransform: 'uppercase',
       }
     };
 
     const createProjectButton = (
       <Button
-        onClick={() => {console.log("create new project");}}
+        onClick={this.handleCreateProject}
         style={styles.createButton}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -75,7 +83,7 @@ export default class ProjectsList extends Component {
           selected={projectId === currentProjectId}
           onClick={setCurrentProjectId.bind(this, projectId)}
         >
-          {projects[projectId].name.toUpperCase()}
+          {projects[projectId].title || 'NEW PROJECT'}
         </Button>
       )
     });

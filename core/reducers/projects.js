@@ -21,7 +21,7 @@ function getProject(projectId) {
       return dispatch({
         type: GET_PROJECT,
         projectId,
-        data: {...data.val(), id: projectId},
+        data: data.val(),
       })
     });
   }
@@ -35,7 +35,7 @@ function getCards(projectId) {
         type: GET_CARD,
         projectId,
         cardId: data.key,
-        data: {...data.val(), projectId, id: data.key},
+        data: data.val(),
       })
     });
     ref.on('child_changed', (data) => {
@@ -43,10 +43,24 @@ function getCards(projectId) {
         type: GET_CARD,
         projectId,
         cardId: data.key,
-        data: {...data.val(), projectId, id: data.key},
+        data: data.val(),
       })
     });
   };
+}
+
+export function createProject(uid) {
+  const newProjectRef = Firebase.database().ref(`projects`).push();
+  newProjectRef.set({
+    id: newProjectRef.key,
+    collaborators: {
+      [uid]: true,
+    },
+  });
+
+  Firebase.database().ref(`users/${uid}/projects`).update({
+    [newProjectRef.key]: true,
+  });
 }
 
 export function createTextCard(projectId) {
@@ -61,6 +75,10 @@ export function createTextCard(projectId) {
 
 export function changeCardTitle(card, newTitle) {
   Firebase.database().ref(`cards/${card.projectId}/${card.id}/title`).set(newTitle);
+}
+
+export function changeProjectTitle(projectId, newTitle) {
+  Firebase.database().ref(`projects/${projectId}/title`).set(newTitle);
 }
 
 const initialState = {

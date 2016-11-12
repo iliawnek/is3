@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import TextCard from '../TextCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
+import {changeProjectTitle} from '../../core/reducers/projects';
 
 @connect(state => ({
   projects: state.projects,
@@ -24,6 +25,12 @@ export default class ProjectPane extends Component {
     });
   }
 
+  handleTitleChange = (event) => {
+    if (event.target.value !== this.state.currentProject.title) {
+      changeProjectTitle(this.state.currentProject.id, event.target.value);
+    }
+  };
+
   render() {
     const {currentProject} = this.state;
 
@@ -33,6 +40,13 @@ export default class ProjectPane extends Component {
         textAlign: 'center',
         marginBottom: 50,
         fontSize: 32,
+        height: 36,
+        fontFamily: 'Montserrat, sans-serif',
+        outline: 'none',
+        border: 'none',
+        textOverflow: 'ellipsis',
+        backgroundColor: 'transparent',
+        textTransform: 'uppercase',
       },
       projectPane: {
         display: 'flex',
@@ -40,9 +54,6 @@ export default class ProjectPane extends Component {
         padding: 50,
         flexDirection: 'column',
         alignItems: 'center',
-      },
-      projectName: {
-        fontSize: 32,
       },
       cardGrid: {
         display: 'flex',
@@ -63,17 +74,23 @@ export default class ProjectPane extends Component {
     if (cards) {
       cards.push(
         <NewCardPlaceholder
+          key={currentProject.id}
           projectId={currentProject.id}
         />
       );
     }
 
-    const title = currentProject ? currentProject.name.toUpperCase() : '';
+    const title = currentProject ? currentProject.title : '';
 
     return (
       <div style={styles.projectPane}>
         <div style={styles.cardGrid}>
-          <div style={styles.header}>{title}</div>
+          <input
+            style={styles.header}
+            onChange={this.handleTitleChange}
+            value={title}
+            placeholder="NEW PROJECT"
+          />
           {cards}
         </div>
       </div>
