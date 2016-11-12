@@ -15,6 +15,7 @@ export default class Card extends Component {
         backgroundColor: 'white',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.25)',
         padding: 24,
+        margin: 24,
         ...style,
       },
     };

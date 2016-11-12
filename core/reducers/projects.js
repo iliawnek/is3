@@ -2,6 +2,7 @@ import Firebase from 'firebase';
 
 const GET_PROJECT = 'is3/projects/GET_PROJECT';
 const GET_CARD = 'is3/projects/GET_CARD';
+const CHANGE_CARD = 'is3/projects/CHANGE_CARD';
 
 export function getProjects(uid) {
   return (dispatch) => {
@@ -37,14 +38,29 @@ function getCards(projectId) {
         data: {...data.val(), projectId, id: data.key},
       })
     });
+    ref.on('child_changed', (data) => {
+      return dispatch({
+        type: GET_CARD,
+        projectId,
+        cardId: data.key,
+        data: {...data.val(), projectId, id: data.key},
+      })
+    });
   };
 }
 
 export function createTextCard(projectId) {
-  const ref = Firebase.database().ref(`cards/${projectId}`);
-  ref.push({
+  const projectRef = Firebase.database().ref(`cards/${projectId}`);
+  const newCardRef = projectRef.push();
+  newCardRef.set({
     type: 'text',
+    projectId,
+    id: newCardRef.key,
   });
+}
+
+export function changeCardTitle(card, newTitle) {
+  Firebase.database().ref(`cards/${card.projectId}/${card.id}/title`).set(newTitle);
 }
 
 const initialState = {
@@ -62,6 +78,7 @@ export default function reducer(state = initialState, action = {}) {
         },
       };
     case GET_CARD:
+    case CHANGE_CARD:
       return {
         ...state,
         [action.projectId]: {

@@ -17,7 +17,8 @@ export default class NewCardPlaceholder extends Component {
     const styles = {
       placeholder: {
         width: 350,
-        height: 358,
+        height: 350,
+        margin: 24,
         backgroundColor: 'transparent',
         border: '2px dashed #CCC',
         color: '#CCC',

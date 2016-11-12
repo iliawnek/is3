@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Card from '../Card';
 import Firebase from 'firebase';
+import {changeCardTitle} from '../../core/reducers/projects';
 
 @connect(state => ({user: state.auth.user}))
 export default class TextCard extends Component {
@@ -13,13 +14,7 @@ export default class TextCard extends Component {
   componentDidMount() {
     const {card, user} = this.props;
 
-    const titleRef = Firebase.database().ref(`cards/${card.projectId}/${card.id}/title`);
-    const titleCodeMirror = CodeMirror(this.titleDiv, {lineWrapping: true, viewportMargin: Infinity, placeholder: "Text card title"});
-    Firepad.fromCodeMirror(titleRef, titleCodeMirror, {
-      userId: user.uid,
-    });
-
-    const textRef = Firebase.database().ref(`cards/${card.projectId}/${card.id}/text`);
+    const textRef = Firebase.database().ref(`firepad/${card.id}`);
     const textCodeMirror = CodeMirror(this.textDiv, {lineWrapping: true, viewportMargin: Infinity, placeholder: "Start typing here..."});
     Firepad.fromCodeMirror(textRef, textCodeMirror, {
       richTextShortcuts: true,
@@ -28,10 +23,15 @@ export default class TextCard extends Component {
   }
 
   textDiv;
-  titleDiv;
+
+  handleTitleChange = (event) => {
+    if (event.target.value !== this.props.card.title) {
+      changeCardTitle(this.props.card, event.target.value);
+    }
+  };
 
   render() {
-    const {...otherProps} = this.props;
+    const {card, ...otherProps} = this.props;
 
     const styles = {
       card: {
@@ -40,20 +40,29 @@ export default class TextCard extends Component {
         boxSizing: 'border-box',
       },
       title: {
-        fontSize: 24,
+        fontSize: 18,
+        fontWeight: 'bold',
         height: 36,
+        fontFamily: 'Montserrat, sans-serif',
+        outline: 'none',
+        border: 'none',
+        textOverflow: 'ellipsis',
+        width: '100%',
       },
       text: {
-        marginTop: 24,
+        marginTop: 8,
         height: 242,
       },
     };
 
     return (
       <Card style={styles.card} {...otherProps}>
-        <div style={styles.title} className="Firepad-title" ref={(div) => {
-          this.titleDiv = div;
-        }}/>
+        <input
+          style={styles.title}
+          onChange={this.handleTitleChange}
+          value={card.title}
+          placeholder="Text card title"
+        />
         <div style={styles.text} className="Firepad-text" ref={(div) => {
           this.textDiv = div;
         }}/>
