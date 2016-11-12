@@ -61,7 +61,7 @@ export default class TextCard extends Component {
           style={styles.title}
           onChange={this.handleTitleChange}
           value={card.title}
-          placeholder="Text card title"
+          placeholder="New text card"
         />
         <div style={styles.text} className="Firepad-text" ref={(div) => {
           this.textDiv = div;
