@@ -3,6 +3,7 @@ import Firebase from 'firebase';
 const GET_PROJECT = 'is3/projects/GET_PROJECT';
 const GET_CARD = 'is3/projects/GET_CARD';
 const CHANGE_CARD = 'is3/projects/CHANGE_CARD';
+const GET_COLLABORATOR = 'is3/projects/GET_COLLABORATOR';
 
 export function getProjects(uid) {
   return (dispatch) => {
@@ -15,23 +16,41 @@ export function getProjects(uid) {
 }
 
 function getProject(projectId) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const currentUid = getState().auth.user.uid;
     const ref = Firebase.database().ref(`projects/${projectId}`);
-    ref.on('value', (data) => {
-      return dispatch({
+    ref.on('value', data => {
+      Object.keys(data.val().collaborators).forEach(uid => {
+        if ((!getState().collaborators || !getState().collaborators[uid]) && uid !== currentUid) {
+          dispatch(getCollaborator(uid));
+        }
+      });
+      dispatch({
         type: GET_PROJECT,
         projectId,
         data: data.val(),
-      })
+      });
     });
   }
+}
+
+function getCollaborator(uid) {
+  return dispatch => {
+    Firebase.database().ref(`users/${uid}`).on('value', data => {
+      console.debug(uid, data.val());
+      dispatch({
+        type: GET_COLLABORATOR,
+        data: {...data.val(), uid, projects: undefined},
+      });
+    });
+  };
 }
 
 function getCards(projectId) {
   return (dispatch) => {
     const ref = Firebase.database().ref(`cards/${projectId}`);
     ref.on('child_added', (data) => {
-      return dispatch({
+      dispatch({
         type: GET_CARD,
         projectId,
         cardId: data.key,
@@ -39,7 +58,7 @@ function getCards(projectId) {
       })
     });
     ref.on('child_changed', (data) => {
-      return dispatch({
+      dispatch({
         type: GET_CARD,
         projectId,
         cardId: data.key,
@@ -82,7 +101,7 @@ export function changeProjectTitle(projectId, newTitle) {
 }
 
 const initialState = {
-
+  collaborators: {},
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -106,6 +125,14 @@ export default function reducer(state = initialState, action = {}) {
             [action.cardId]: action.data,
           },
         },
+      };
+    case GET_COLLABORATOR:
+      return {
+        ...state,
+        collaborators: {
+          ...state.collaborators,
+          [action.data.uid]: action.data,
+        }
       };
     default:
       return state;

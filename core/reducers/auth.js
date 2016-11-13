@@ -39,6 +39,11 @@ export function getUser() {
   return dispatch => {
     Firebase.auth().onAuthStateChanged(user => {
       dispatch({type: GET_USER, user});
+      if (user) {
+        Firebase.database().ref(`users/${user.uid}/photo`).set(user.photoURL);
+        Firebase.database().ref(`users/${user.uid}/email`).set(user.email);
+        Firebase.database().ref(`users/${user.uid}/name`).set(user.displayName);
+      }
     });
   };
 }

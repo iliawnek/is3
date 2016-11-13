@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import TextCard from '../TextCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
+import CollaboratorList from '../CollaboratorList';
 import {changeProjectTitle} from '../../core/reducers/projects';
 
 @connect(state => ({
@@ -92,6 +93,7 @@ export default class ProjectPane extends Component {
             value={title}
             placeholder="NEW PROJECT"
           />
+          {currentProject && <CollaboratorList collaborators={currentProject.collaborators}/>}
           {cards}
         </div>
       </div>

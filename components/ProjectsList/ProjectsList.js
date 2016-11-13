@@ -73,7 +73,7 @@ export default class ProjectsList extends Component {
       </Button>
     );
 
-    const projectsList = Object.keys(projects).map(projectId => {
+    const projectsList = Object.keys(projects).filter(projectId => projectId !== 'collaborators').map(projectId => {
       return (
         <Button
           style={styles.projectsListButton}
