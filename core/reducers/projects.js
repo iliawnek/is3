@@ -91,8 +91,8 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         [action.projectId]: {
+          ...state[action.projectId],
           ...action.data,
-          cards: {},
         },
       };
     case GET_CARD:

@@ -38,7 +38,7 @@ export default class ProjectPane extends Component {
       header: {
         width: '100%',
         textAlign: 'center',
-        marginBottom: 50,
+        marginBottom: 24,
         fontSize: 32,
         height: 36,
         fontFamily: 'Montserrat, sans-serif',
@@ -63,24 +63,25 @@ export default class ProjectPane extends Component {
       }
     };
 
-    const cards = (
-      currentProject && Object.values(currentProject.cards).map((card) => {
+    let cards = (
+      currentProject && currentProject.cards && Object.values(currentProject.cards).map((card) => {
         return (
           <TextCard card={card} key={card.id}/>
         );
       })
     );
 
-    if (cards) {
-      cards.push(
-        <NewCardPlaceholder
-          key={currentProject.id}
-          projectId={currentProject.id}
-        />
-      );
-    }
+    const placeholder = currentProject && (
+      <NewCardPlaceholder
+        key={currentProject.id}
+        projectId={currentProject.id}
+      />
+    );
 
-    const title = currentProject ? currentProject.title : '';
+    if (cards) cards.push(placeholder);
+    else cards = placeholder;
+
+    const title = currentProject && currentProject.title ? currentProject.title : '';
 
     return (
       <div style={styles.projectPane}>
