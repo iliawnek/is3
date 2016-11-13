@@ -51,7 +51,7 @@ export default class ProjectPane extends Component {
       projectPane: {
         display: 'flex',
         boxSizing: 'border-box',
-        padding: 50,
+        padding: 48,
         flexDirection: 'column',
         alignItems: 'center',
       },

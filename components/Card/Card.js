@@ -11,11 +11,12 @@ export default class Card extends Component {
 
     const styles = {
       card: {
-        width: '100%',
+        width: 350,
+        height: 350,
         backgroundColor: 'white',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.25)',
         padding: 24,
-        margin: 24,
+        margin: 12,
         ...style,
       },
     };

@@ -36,7 +36,6 @@ export default class TextCard extends Component {
     const styles = {
       card: {
         flexDirection: 'column',
-        width: 350,
         boxSizing: 'border-box',
       },
       title: {
