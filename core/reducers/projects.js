@@ -17,11 +17,10 @@ export function getProjects(uid) {
 
 function getProject(projectId) {
   return (dispatch, getState) => {
-    const currentUid = getState().auth.user.uid;
     const ref = Firebase.database().ref(`projects/${projectId}`);
     ref.on('value', data => {
       Object.keys(data.val().collaborators).forEach(uid => {
-        if ((!getState().collaborators || !getState().collaborators[uid]) && uid !== currentUid) {
+        if (!getState().collaborators || !getState().collaborators[uid]) {
           dispatch(getCollaborator(uid));
         }
       });
@@ -37,7 +36,6 @@ function getProject(projectId) {
 function getCollaborator(uid) {
   return dispatch => {
     Firebase.database().ref(`users/${uid}`).on('value', data => {
-      console.debug(uid, data.val());
       dispatch({
         type: GET_COLLABORATOR,
         data: {...data.val(), uid, projects: undefined},

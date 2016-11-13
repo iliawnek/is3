@@ -37,17 +37,26 @@ export default class ProjectPane extends Component {
 
     const styles = {
       header: {
+        marginBottom: 24,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+      },
+      title: {
         width: '100%',
         textAlign: 'center',
-        marginBottom: 24,
         fontSize: 32,
-        height: 36,
+        // height: 36,
         fontFamily: 'Montserrat, sans-serif',
         outline: 'none',
         border: 'none',
         textOverflow: 'ellipsis',
         backgroundColor: 'transparent',
         textTransform: 'uppercase',
+      },
+      collaboratorList: {
+        marginTop: 16,
       },
       projectPane: {
         display: 'flex',
@@ -73,11 +82,11 @@ export default class ProjectPane extends Component {
     );
 
     const placeholder = currentProject && (
-      <NewCardPlaceholder
-        key={currentProject.id}
-        projectId={currentProject.id}
-      />
-    );
+        <NewCardPlaceholder
+          key={currentProject.id}
+          projectId={currentProject.id}
+        />
+      );
 
     if (cards) cards.push(placeholder);
     else cards = placeholder;
@@ -86,14 +95,19 @@ export default class ProjectPane extends Component {
 
     return (
       <div style={styles.projectPane}>
-        <div style={styles.cardGrid}>
+        <div style={styles.header}>
           <input
-            style={styles.header}
+            style={styles.title}
             onChange={this.handleTitleChange}
             value={title}
             placeholder="NEW PROJECT"
           />
-          {currentProject && <CollaboratorList collaborators={currentProject.collaborators}/>}
+          {currentProject && <CollaboratorList
+            collaboratorIds={Object.keys(currentProject.collaborators)}
+            style={styles.collaboratorList}
+          />}
+        </div>
+        <div style={styles.cardGrid}>
           {cards}
         </div>
       </div>
