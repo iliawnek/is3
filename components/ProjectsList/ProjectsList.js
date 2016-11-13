@@ -11,14 +11,12 @@ import {createProject} from '../../core/reducers/projects';
   projects: state.projects,
   currentProjectId: state.ui.currentProjectId,
 }), {
-  setCurrentProjectId,
   closeProjectsList,
 })
 
 export default class ProjectsList extends Component {
   static propTypes = {
     projectsListOpen: PropTypes.bool,
-    setCurrentProjectId: PropTypes.func,
     closeProjectsList: PropTypes.func,
     uid: PropTypes.string,
   };
@@ -28,7 +26,7 @@ export default class ProjectsList extends Component {
   };
 
   render() {
-    const {projectsListOpen, projects, currentProjectId, setCurrentProjectId} = this.props;
+    const {projectsListOpen, projects, currentProjectId, uid} = this.props;
 
     const styles = {
       drawer: {
@@ -81,7 +79,7 @@ export default class ProjectsList extends Component {
           style={styles.projectsListButton}
           key={projectId}
           selected={projectId === currentProjectId}
-          onClick={setCurrentProjectId.bind(this, projectId)}
+          onClick={setCurrentProjectId.bind(this, uid, projectId)}
         >
           {projects[projectId].title || 'NEW PROJECT'}
         </Button>
