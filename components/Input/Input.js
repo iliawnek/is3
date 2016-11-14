@@ -26,7 +26,10 @@ export default class Input extends Component {
 
     const styles = {
       input: {
-        padding: 4,
+        paddingLeft: 16,
+        paddingRight: 16,
+        paddingTop: 8,
+        paddingBottom: 8,
         // override default input style
         border: 'none',
         outline: 'none',
@@ -47,7 +50,7 @@ export default class Input extends Component {
           onBlur={this.disableEditing}
           {...otherProps}
         />
-        <ReactTooltip id="input" effect="solid" place="top"/>
+        {!editing && <ReactTooltip id="input" effect="solid" place="top"/>}
       </div>
     );
   }
