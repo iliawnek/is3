@@ -78,6 +78,8 @@ export function createProject(uid) {
   Firebase.database().ref(`users/${uid}/projects`).update({
     [newProjectRef.key]: true,
   });
+
+  return newProjectRef.key;
 }
 
 export function createTextCard(projectId) {

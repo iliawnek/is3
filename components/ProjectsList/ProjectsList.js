@@ -23,7 +23,8 @@ export default class ProjectsList extends Component {
   };
 
   handleCreateProject = () => {
-    createProject(this.props.uid);
+    const newProjectId = createProject(this.props.uid);
+    setCurrentProjectId(this.props.uid, newProjectId);
   };
 
   render() {
