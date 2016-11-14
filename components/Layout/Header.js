@@ -116,7 +116,7 @@ class Header extends React.Component {
           </Button>
           {activityButton}
         </div>
-        <ReactTooltip id="header-button" effect="solid" place="bottom"/>
+        <ReactTooltip delayShow={200} id="header-button" effect="solid" place="bottom"/>
       </div>
     );
   }
