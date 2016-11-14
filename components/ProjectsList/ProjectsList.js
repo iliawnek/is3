@@ -84,7 +84,7 @@ export default class ProjectsList extends Component {
           selected={projectId === currentProjectId}
           onClick={setCurrentProjectId.bind(this, uid, projectId)}
         >
-          {projects[projectId].title || 'NEW PROJECT'}
+          {projects[projectId].title || 'New project'}
         </Button>
       )
     });

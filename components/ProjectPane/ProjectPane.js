@@ -97,7 +97,7 @@ export default class ProjectPane extends Component {
             style={styles.title}
             onChange={this.handleTitleChange}
             value={title}
-            placeholder="NEW PROJECT"
+            placeholder="New project"
           />
           {currentProject && <CollaboratorList
             collaboratorIds={Object.keys(currentProject.collaborators)}
