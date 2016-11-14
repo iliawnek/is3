@@ -51,7 +51,6 @@ class Header extends React.Component {
       closeProjectsList,
       openActivityLog,
       closeActivityLog,
-      signedIn,
     } = this.props;
 
     const styles = {
@@ -68,13 +67,19 @@ class Header extends React.Component {
         display: 'flex',
       },
       webappName: {
+        display: 'flex',
+        boxSizing: 'border-box',
+        position: 'relative',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 60,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'transparent',
         color: 'white',
       },
       icon: {
         fill: 'white',
-      },
-      signOutButton: {
-        display: signedIn ? 'flex' : 'none',
       },
     };
 
@@ -108,7 +113,7 @@ class Header extends React.Component {
       <div style={styles.header}>
         <div style={styles.headerSection}>
           {projectsButton}
-          <Button to="/">WEBAPP NAME</Button>
+          <div style={styles.webappName}>WEBAPP NAME</div>
         </div>
         <div style={styles.headerSection}>
           <UserButton/>

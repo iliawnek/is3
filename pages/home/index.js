@@ -14,16 +14,20 @@ import Layout from '../../components/Layout';
 import ProjectsList from '../../components/ProjectsList';
 import ActivityLog from '../../components/ActivityLog';
 import ProjectPane from '../../components/ProjectPane';
-import {getUser} from '../../core/reducers/auth';
+import Button from '../../components/Button';
+import {getUser, signIn} from '../../core/reducers/auth';
 import {getProjects} from '../../core/reducers/projects';
 import {getCurrentProjectId} from '../../core/reducers/ui';
 
 @connect((state) => ({
   user: state.auth.user,
+  signedIn: state.auth.signedIn,
+  checkedForUser: state.auth.checkedForUser,
   projects: state.projects,
   currentProjectId: state.ui.currentProjectId,
 }), {
   getUser,
+  signIn,
   getProjects,
   getCurrentProjectId,
 })
@@ -35,6 +39,9 @@ class HomePage extends React.Component {
     getProjects: PropTypes.func,
     currentProjectId: PropTypes.string,
     getCurrentProjectId: PropTypes.func,
+    signedIn: PropTypes.bool,
+    checkedForUser: PropTypes.bool,
+    signIn: PropTypes.func,
   };
 
   componentWillMount() {
@@ -53,13 +60,59 @@ class HomePage extends React.Component {
   }
 
   render() {
+    if (!this.props.checkedForUser && !this.props.signedIn) return null;
+
+    if (this.props.signedIn) {
+      return (
+        <Layout>
+          <ProjectsList/>
+          <ProjectPane/>
+          <ActivityLog/>
+        </Layout>
+      );
+    }
+
+    const styles = {
+      landing: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100vw',
+        height: '100vh',
+      },
+      content: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      },
+      title: {
+        fontSize: 48,
+      },
+      subtitle: {
+        fontSize: 24,
+        marginTop: 12,
+        color: '#444',
+      },
+      signInButton: {
+        backgroundColor: '#4285F4',
+        marginTop: 64,
+      },
+    };
+
     return (
-      <Layout>
-        <ProjectsList/>
-        <ProjectPane/>
-        <ActivityLog/>
-      </Layout>
-    );
+      <div style={styles.landing}>
+        <div style={styles.content}>
+          <div style={styles.title}>WEBAPP NAME</div>
+          <div style={styles.subtitle}>This is a subtitle.</div>
+          <Button
+            onClick={this.props.signIn}
+            style={styles.signInButton}
+          >
+            ENTER WITH GOOGLE
+          </Button>
+        </div>
+      </div>
+    )
   }
 
 }

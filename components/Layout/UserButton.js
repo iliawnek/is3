@@ -1,48 +1,44 @@
 import {connect} from 'react-redux';
-import * as authActions from '../../core/reducers/auth';
 
 import React, {Component, PropTypes} from 'react';
-import Button from '../Button';
 import Avatar from '../Avatar';
 
-@connect(store => ({
-  user: store.auth.user,
-}), authActions)
+@connect(store => ({user: store.auth.user}))
 
 export default class UserButton extends Component {
   static propTypes = {
     user: PropTypes.object,
-    signIn: PropTypes.func,
-    signOut: PropTypes.func,
   };
 
   render() {
     const {user} = this.props;
 
     const styles = {
+      badge: {
+        display: 'flex',
+        boxSizing: 'border-box',
+        position: 'relative',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 60,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'transparent',
+        color: 'white',
+      },
       avatar: {
         marginLeft: 10,
       },
     };
 
-    const signInButton = (
-      <Button
-        onClick={this.props.signIn}
-      >
-        SIGN IN WITH GOOGLE
-      </Button>
-    );
-
-    const userButton = user && (
-      <Button>
+    return user && (
+      <div style={styles.badge}>
         {user.displayName}
         <Avatar
           image={user.photoURL}
           style={styles.avatar}
         />
-      </Button>
+      </div>
     );
-
-    return user ? userButton : signInButton;
   }
 }
