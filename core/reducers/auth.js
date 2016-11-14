@@ -30,7 +30,10 @@ export function signOut() {
   return dispatch => {
     dispatch(waiting());
     Firebase.auth().signOut()
-      .then(() => dispatch(success()))
+      .then(() => {
+        dispatch(success());
+        location.reload();
+      })
       .catch(() => dispatch(failure()));
   };
 }
@@ -43,6 +46,7 @@ export function getUser() {
         Firebase.database().ref(`users/${user.uid}/photo`).set(user.photoURL);
         Firebase.database().ref(`users/${user.uid}/email`).set(user.email);
         Firebase.database().ref(`users/${user.uid}/name`).set(user.displayName);
+        dispatch({type: SIGN_IN_SUCCESS});
       }
     });
   };
@@ -87,7 +91,6 @@ export default function auth(state = initialState, action = {}) {
       return {
         ...state,
         user: action.user,
-        signedIn: true,
       };
 
     default:

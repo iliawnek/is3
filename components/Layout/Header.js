@@ -25,6 +25,7 @@ import {
 @connect(store => ({
   projectsListOpen: store.ui.projectsListOpen,
   activityLogOpen: store.ui.activityLogOpen,
+  signedIn: store.auth.signedIn,
 }), {
   // auth
   signIn,
@@ -39,6 +40,7 @@ class Header extends React.Component {
   static propTypes = {
     signIn: PropTypes.func,
     signOut: PropTypes.func,
+    signedIn: PropTypes.bool,
   };
 
   render() {
@@ -49,6 +51,7 @@ class Header extends React.Component {
       closeProjectsList,
       openActivityLog,
       closeActivityLog,
+      signedIn,
     } = this.props;
 
     const styles = {
@@ -69,7 +72,10 @@ class Header extends React.Component {
       },
       icon: {
         fill: 'white',
-      }
+      },
+      signOutButton: {
+        display: signedIn ? 'flex' : 'none',
+      },
     };
 
     const projectsButton = (
@@ -107,6 +113,7 @@ class Header extends React.Component {
         <div style={styles.headerSection}>
           <UserButton/>
           <Button
+            style={styles.signOutButton}
             data-tip="Sign out"
             data-for="header-button"
             onClick={this.props.signOut}>
