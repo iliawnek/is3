@@ -1,0 +1,6 @@
+{
+  "name": "ProjectBar",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ProjectBar.js"
+}

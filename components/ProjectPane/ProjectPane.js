@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import TextCard from '../TextCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
-import CollaboratorList from '../CollaboratorList';
+import CollaboratorList from '../ProjectBar/ProjectBar';
 import {changeProjectTitle} from '../../core/reducers/projects';
 import Radium from 'radium';
 import Input from '../Input';
@@ -37,6 +37,7 @@ export default class ProjectPane extends Component {
 
   render() {
     const {currentProject} = this.state;
+    if (!currentProject) return null;
 
     const styles = {
       header: {
