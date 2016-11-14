@@ -25,11 +25,12 @@ export default class Avatar extends Component {
       <div>
         <img
           data-tip={tooltip}
+          data-for={image}
           src={image}
           style={styles.avatar}
           {...otherProps}
         />
-        <ReactTooltip effect="solid" place="bottom"/>
+        <ReactTooltip id={image} effect="solid" place="bottom"/>
       </div>
     );
   }

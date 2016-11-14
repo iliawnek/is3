@@ -76,6 +76,7 @@ class Header extends React.Component {
       <Button
         onClick={projectsListOpen ? closeProjectsList : openProjectsList}
         data-tip="View all your projects"
+        data-for="header-button"
       >
         <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
           <path style={styles.icon} d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
@@ -84,7 +85,11 @@ class Header extends React.Component {
     );
 
     const activityButton = (
-      <Button data-tip="View recent activity" onClick={activityLogOpen ? closeActivityLog : openActivityLog}>
+      <Button
+        onClick={activityLogOpen ? closeActivityLog : openActivityLog}
+        data-tip="View recent activity"
+        data-for="header-button"
+      >
         <svg width="24" height="20" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg">
           <path style={styles.icon}
                 d="M 8 20C 9.1 20 10 19.0769 10 17.9487L 6 17.9487C 6 19.0769 6.89 20 8 20ZM 14 13.8462L 14 8.71795C 14 5.56923 12.36 2.93333 9.5 2.2359L 9.5 1.53846C 9.5 0.68718 8.83 0 8 0C 7.17 0 6.5 0.68718 6.5 1.53846L 6.5 2.2359C 3.63 2.93333 2 5.55897 2 8.71795L 2 13.8462L 0 15.8974L 0 16.9231L 16 16.9231L 16 15.8974L 14 13.8462Z"/>
@@ -101,14 +106,17 @@ class Header extends React.Component {
         </div>
         <div style={styles.headerSection}>
           <UserButton/>
-          <Button data-tip="Sign out" onClick={this.props.signOut}>
+          <Button
+            data-tip="Sign out"
+            data-for="header-button"
+            onClick={this.props.signOut}>
             <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
               <path style={styles.icon} d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
             </svg>
           </Button>
           {activityButton}
         </div>
-        <ReactTooltip effect="solid" place="bottom"/>
+        <ReactTooltip id="header-button" effect="solid" place="bottom"/>
       </div>
     );
   }

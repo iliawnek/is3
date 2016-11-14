@@ -59,13 +59,13 @@ export default class ProjectsList extends Component {
         backgroundColor: 'transparent',
         color: '#444',
         justifyContent: 'space-between',
-        textTransform: 'uppercase',
       }
     };
 
     const createProjectButton = (
       <Button
         data-tip="Create a new project"
+        data-for="create-project"
         onClick={this.handleCreateProject}
         style={styles.createButton}
       >
@@ -100,7 +100,7 @@ export default class ProjectsList extends Component {
           {createProjectButton}
         </div>
         {projectsList}
-        <ReactTooltip place="bottom" effect="solid"/>
+        <ReactTooltip id="create-project" place="right" effect="solid"/>
       </Drawer>
     );
   }

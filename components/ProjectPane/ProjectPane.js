@@ -4,12 +4,15 @@ import TextCard from '../TextCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
 import CollaboratorList from '../CollaboratorList';
 import {changeProjectTitle} from '../../core/reducers/projects';
+import Radium from 'radium';
+import Input from '../Input';
 
 @connect(state => ({
   projects: state.projects,
   currentProjectId: state.ui.currentProjectId,
 }), {})
 
+@Radium
 export default class ProjectPane extends Component {
   static propTypes = {
     currentProjectId: PropTypes.string,
@@ -44,16 +47,9 @@ export default class ProjectPane extends Component {
         width: '100%',
       },
       title: {
-        width: '100%',
         textAlign: 'center',
         fontSize: 32,
-        // height: 36,
-        fontFamily: 'Montserrat, sans-serif',
-        outline: 'none',
-        border: 'none',
-        textOverflow: 'ellipsis',
-        backgroundColor: 'transparent',
-        textTransform: 'uppercase',
+        transition: 'background-color 0.3s ease-in-out',
       },
       collaboratorList: {
         marginTop: 16,
@@ -96,7 +92,7 @@ export default class ProjectPane extends Component {
     return (
       <div style={styles.projectPane}>
         <div style={styles.header}>
-          <input
+          <Input
             style={styles.title}
             onChange={this.handleTitleChange}
             value={title}
