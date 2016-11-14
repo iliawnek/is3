@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import ReactTooltip from 'react-tooltip';
 import Drawer from '../Drawer';
 import Button from '../Button';
 import {setCurrentProjectId, closeProjectsList} from '../../core/reducers/ui';
@@ -64,6 +65,7 @@ export default class ProjectsList extends Component {
 
     const createProjectButton = (
       <Button
+        data-tip="Create a new project"
         onClick={this.handleCreateProject}
         style={styles.createButton}
       >
@@ -98,6 +100,7 @@ export default class ProjectsList extends Component {
           {createProjectButton}
         </div>
         {projectsList}
+        <ReactTooltip place="bottom" effect="solid"/>
       </Drawer>
     );
   }

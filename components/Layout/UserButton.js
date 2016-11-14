@@ -29,14 +29,12 @@ export default class UserButton extends Component {
       <Button
         onClick={this.props.signIn}
       >
-        GOOGLE LOGIN
+        SIGN IN WITH GOOGLE
       </Button>
     );
 
     const userButton = user && (
-      <Button
-        onClick={this.props.signOut}
-      >
+      <Button>
         {user.displayName}
         <Avatar
           image={user.photoURL}
