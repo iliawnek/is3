@@ -86,11 +86,14 @@ class Header extends React.Component {
     const projectsButton = (
       <Button
         onClick={projectsListOpen ? closeProjectsList : openProjectsList}
-        data-tip="View all your projects"
+        data-tip={projectsListOpen ? "Close projects list" : "View all your projects"}
         data-for="header-button"
       >
         <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-          <path style={styles.icon} d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          {projectsListOpen ?
+            <path style={styles.icon} d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/> :
+            <path style={styles.icon} d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          }
         </svg>
       </Button>
     );
