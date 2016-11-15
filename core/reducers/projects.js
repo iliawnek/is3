@@ -3,6 +3,7 @@ import Firebase from 'firebase';
 const GET_PROJECT = 'is3/projects/GET_PROJECT';
 const GET_CARD = 'is3/projects/GET_CARD';
 const CHANGE_CARD = 'is3/projects/CHANGE_CARD';
+const REMOVE_CARD = 'is3/projects/REMOVE_CARD';
 const GET_COLLABORATOR = 'is3/projects/GET_COLLABORATOR';
 
 export function getProjects(uid) {
@@ -57,10 +58,17 @@ function getCards(projectId) {
     });
     ref.on('child_changed', (data) => {
       dispatch({
-        type: GET_CARD,
+        type: CHANGE_CARD,
         projectId,
         cardId: data.key,
         data: data.val(),
+      })
+    });
+    ref.on('child_removed', (data) => {
+      dispatch({
+        type: REMOVE_CARD,
+        projectId,
+        cardId: data.key,
       })
     });
   };
@@ -100,6 +108,10 @@ export function changeProjectTitle(projectId, newTitle) {
   Firebase.database().ref(`projects/${projectId}/title`).set(newTitle);
 }
 
+export function deleteCard(card) {
+  Firebase.database().ref(`cards/${card.projectId}/${card.id}`).remove();
+}
+
 const initialState = {
   collaborators: {},
 };
@@ -123,6 +135,17 @@ export default function reducer(state = initialState, action = {}) {
           cards: {
             ...state[action.projectId].cards,
             [action.cardId]: action.data,
+          },
+        },
+      };
+    case REMOVE_CARD:
+      return {
+        ...state,
+        [action.projectId]: {
+          ...state[action.projectId],
+          cards: {
+            ...state[action.projectId].cards,
+            [action.cardId]: undefined,
           },
         },
       };

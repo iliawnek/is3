@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Card from '../Card';
+import Button from '../Button';
 import Firebase from 'firebase';
-import {changeCardTitle} from '../../core/reducers/projects';
+import {changeCardTitle, deleteCard} from '../../core/reducers/projects';
 
 @connect(state => ({user: state.auth.user}))
 export default class TextCard extends Component {
@@ -15,7 +16,11 @@ export default class TextCard extends Component {
     const {card, user} = this.props;
 
     const textRef = Firebase.database().ref(`firepad/${card.id}`);
-    const textCodeMirror = CodeMirror(this.textDiv, {lineWrapping: true, viewportMargin: Infinity, placeholder: "Start typing here..."});
+    const textCodeMirror = CodeMirror(this.textDiv, {
+      lineWrapping: true,
+      viewportMargin: Infinity,
+      placeholder: "Start typing here..."
+    });
     Firepad.fromCodeMirror(textRef, textCodeMirror, {
       richTextShortcuts: true,
       userId: user.uid,
@@ -38,6 +43,11 @@ export default class TextCard extends Component {
         flexDirection: 'column',
         boxSizing: 'border-box',
       },
+      header: {
+        width: '100%',
+        display: 'flex',
+
+      },
       title: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -46,22 +56,45 @@ export default class TextCard extends Component {
         outline: 'none',
         border: 'none',
         textOverflow: 'ellipsis',
-        width: '100%',
+        width: 'calc(100% - 40px)',
       },
       text: {
         marginTop: 8,
         height: 242,
       },
+      closeButton: {
+        padding: 0,
+        backgroundColor: 'transparent',
+        width: 40,
+        height: 40,
+      },
+      closeIcon: {
+        fill: '#a9a9a9'
+      },
     };
+
+    const closeButton = (
+      <Button
+        style={styles.closeButton}
+        onClick={deleteCard.bind(this, card)}
+      >
+        <svg style={styles.closeIcon} height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </Button>
+    );
 
     return (
       <Card style={styles.card} {...otherProps}>
-        <input
-          style={styles.title}
-          onChange={this.handleTitleChange}
-          value={card.title}
-          placeholder="New text card"
-        />
+        <div style={styles.header}>
+          <input
+            style={styles.title}
+            onChange={this.handleTitleChange}
+            value={card.title}
+            placeholder="New text card"
+          />
+          {closeButton}
+        </div>
         <div style={styles.text} className="Firepad-text" ref={(div) => {
           this.textDiv = div;
         }}/>

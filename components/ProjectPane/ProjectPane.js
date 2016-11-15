@@ -8,35 +8,20 @@ import Radium from 'radium';
 import Input from '../Input';
 
 @connect(state => ({
-  projects: state.projects,
-  currentProjectId: state.ui.currentProjectId,
-}), {})
+  currentProject: state.ui.currentProjectId && state.projects && state.projects[state.ui.currentProjectId],
+}))
 
 @Radium
 export default class ProjectPane extends Component {
-  static propTypes = {
-    currentProjectId: PropTypes.string,
-  };
-
-  state = {
-    currentProject: null,
-  };
-
-  componentWillReceiveProps(nextProps) {
-    const {currentProjectId, projects} = nextProps;
-    this.setState({
-      currentProject: projects && projects[currentProjectId],
-    });
-  }
 
   handleTitleChange = (event) => {
-    if (event.target.value !== this.state.currentProject.title) {
-      changeProjectTitle(this.state.currentProject.id, event.target.value);
+    if (event.target.value !== this.props.currentProject.title) {
+      changeProjectTitle(this.props.currentProject.id, event.target.value);
     }
   };
 
   render() {
-    const {currentProject} = this.state;
+    const {currentProject} = this.props;
     if (!currentProject) return null;
 
     const styles = {
@@ -72,6 +57,7 @@ export default class ProjectPane extends Component {
 
     let cards = (
       currentProject && currentProject.cards && Object.values(currentProject.cards).map((card) => {
+        if (card === undefined) return null;
         return (
           <TextCard card={card} key={card.id}/>
         );
