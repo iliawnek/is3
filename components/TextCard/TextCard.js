@@ -69,7 +69,7 @@ export default class TextCard extends Component {
         height: 40,
       },
       closeIcon: {
-        fill: '#a9a9a9'
+        fill: '#ccc'
       },
     };
 
