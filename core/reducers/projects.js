@@ -109,7 +109,18 @@ export function changeProjectTitle(projectId, newTitle) {
 }
 
 export function deleteCard(card) {
-  Firebase.database().ref(`cards/${card.projectId}/${card.id}`).remove();
+  const cardRef = Firebase.database().ref(`cards/${card.projectId}/${card.id}`);
+  cardRef.once('value', data => {
+    console.log(data.val());
+    Firebase.database().ref(`undo/${card.projectId}`).set(data.val());
+  });
+  cardRef.remove();
+}
+
+export function undoDeletion(projectId) {
+  Firebase.database().ref(`undo/${projectId}`).once('value', data => {
+    Firebase.database().ref(`cards/${projectId}/${data.val().id}`).set(data.val());
+  });
 }
 
 const initialState = {

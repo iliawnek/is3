@@ -18,6 +18,7 @@ import Button from '../../components/Button';
 import {getUser, signIn} from '../../core/reducers/auth';
 import {getProjects} from '../../core/reducers/projects';
 import {getCurrentProjectId} from '../../core/reducers/ui';
+import {Notification} from 'react-notification';
 
 @connect((state) => ({
   user: state.auth.user,
@@ -25,6 +26,7 @@ import {getCurrentProjectId} from '../../core/reducers/ui';
   checkedForUser: state.auth.checkedForUser,
   projects: state.projects,
   currentProjectId: state.ui.currentProjectId,
+  notification: state.ui.notification,
 }), {
   getUser,
   signIn,
@@ -42,6 +44,7 @@ class HomePage extends React.Component {
     signedIn: PropTypes.bool,
     checkedForUser: PropTypes.bool,
     signIn: PropTypes.func,
+    notification: PropTypes.object,
   };
 
   componentWillMount() {
@@ -61,16 +64,6 @@ class HomePage extends React.Component {
 
   render() {
     if (!this.props.checkedForUser && !this.props.signedIn) return null;
-
-    if (this.props.signedIn) {
-      return (
-        <Layout>
-          <ProjectsList/>
-          <ProjectPane/>
-          <ActivityLog/>
-        </Layout>
-      );
-    }
 
     const styles = {
       landing: {
@@ -110,6 +103,21 @@ class HomePage extends React.Component {
         marginRight: 20,
       },
     };
+
+    if (this.props.signedIn) {
+      return (
+        <Layout>
+          <ProjectsList/>
+          <ProjectPane/>
+          <ActivityLog/>
+          <Notification
+            message=""
+            isActive={false}
+            {...this.props.notification}
+          />
+        </Layout>
+      );
+    }
 
     return (
       <div style={styles.landing}>

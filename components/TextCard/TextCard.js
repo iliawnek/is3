@@ -3,13 +3,16 @@ import {connect} from 'react-redux';
 import Card from '../Card';
 import Button from '../Button';
 import Firebase from 'firebase';
-import {changeCardTitle, deleteCard} from '../../core/reducers/projects';
+import {changeCardTitle, deleteCard, undoDeletion} from '../../core/reducers/projects';
+import {displayNotification, hideNotification} from '../../core/reducers/ui';
 
-@connect(state => ({user: state.auth.user}))
+@connect(state => ({user: state.auth.user}), {displayNotification, hideNotification})
 export default class TextCard extends Component {
   static propTypes = {
     card: PropTypes.object,
     user: PropTypes.object,
+    displayNotification: PropTypes.func,
+    hideNotification: PropTypes.func,
   };
 
   componentDidMount() {
@@ -33,6 +36,19 @@ export default class TextCard extends Component {
     if (event.target.value !== this.props.card.title) {
       changeCardTitle(this.props.card, event.target.value);
     }
+  };
+
+  handleDelete = () => {
+    const {card} = this.props;
+    deleteCard(card);
+    this.props.displayNotification({
+      message: `\'${card.title || 'New text card'}\' has been deleted.`,
+      action: 'UNDO',
+      onClick: () => {
+        undoDeletion(card.projectId);
+        this.props.hideNotification();
+      },
+    });
   };
 
   render() {
@@ -76,7 +92,7 @@ export default class TextCard extends Component {
     const closeButton = (
       <Button
         style={styles.closeButton}
-        onClick={deleteCard.bind(this, card)}
+        onClick={this.handleDelete}
       >
         <svg style={styles.closeIcon} height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
           <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
