@@ -10,30 +10,36 @@ import {
   openDeleteProjectModal,
   closeDeleteProjectModal,
 } from '../../core/reducers/ui';
+import {addCollaborator, resetAddCollaboratorFlags} from '../../core/reducers/projects';
 
 @connect(state => ({
   collaborators: state.projects.collaborators,
   addCollaboratorModalOpen: state.ui.addCollaboratorModalOpen,
   deleteProjectModalOpen: state.ui.deleteProjectModalOpen,
+  addCollaboratorFlags: state.projects.addCollaboratorFlags,
 }), {
   openAddCollaboratorModal,
   closeAddCollaboratorModal,
   openDeleteProjectModal,
   closeDeleteProjectModal,
+  addCollaborator,
+  resetAddCollaboratorFlags,
 })
 export default class ProjectBar extends Component {
   static propTypes = {
     collaboratorIds: PropTypes.array,
     collaborators: PropTypes.object,
     style: PropTypes.object,
-    onDelete: PropTypes.func,
     openAddCollaboratorModal: PropTypes.func,
     closeAddCollaboratorModal: PropTypes.func,
     openDeleteProjectModal: PropTypes.func,
     closeDeleteProjectModal: PropTypes.func,
     addCollaboratorModalOpen: PropTypes.bool,
     deleteProjectModalOpen: PropTypes.bool,
-    projectTitle: PropTypes.string,
+    project: PropTypes.object,
+    addCollaborator: PropTypes.func,
+    addCollaboratorFlags: PropTypes.object,
+    resetAddCollaboratorFlags: PropTypes.func,
   };
 
   state = {
@@ -48,20 +54,38 @@ export default class ProjectBar extends Component {
       email: value,
       emailValid: re.test(value),
     });
+    this.props.resetAddCollaboratorFlags();
   };
+
+  handleInvite = () => {
+    const {email} = this.state;
+    const {project} = this.props;
+    this.props.addCollaborator(email, project.id);
+  };
+
+  handleCloseAddCollaboratorModal = () => {
+    this.props.closeAddCollaboratorModal();
+    this.props.resetAddCollaboratorFlags();
+    this.setState({email: ''});
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if ((nextProps.addCollaboratorFlags.success !== this.props.addCollaboratorFlags.success) && nextProps.addCollaboratorFlags.success) {
+      this.setState({email: ''});
+    }
+  }
 
   render() {
     const {
       collaborators,
       collaboratorIds,
-      onDelete,
       style,
       openAddCollaboratorModal,
-      closeAddCollaboratorModal,
       openDeleteProjectModal,
       closeDeleteProjectModal,
       addCollaboratorModalOpen,
       deleteProjectModalOpen,
+      addCollaboratorFlags,
     } = this.props;
 
     const {
@@ -111,7 +135,8 @@ export default class ProjectBar extends Component {
       },
       inviteButtonContainer: {
         display: 'flex',
-        flexDirection: 'row-reverse',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       },
       deleteButtonContainer: {
         display: 'flex',
@@ -149,7 +174,7 @@ export default class ProjectBar extends Component {
         onClickOutside={closeDeleteProjectModal}
         title="DELETE PROJECT?"
       >
-        Are you sure you want to delete <span style={{whiteSpace: 'nowrap', fontWeight: 'bold'}}>{this.props.projectTitle}</span>?
+        Are you sure you want to delete <span style={{whiteSpace: 'nowrap', fontWeight: 'bold'}}>{this.props.project.title}</span>?
         <div style={styles.deleteButtonContainer}>
           <Button style={styles.deleteButton}>
             DELETE
@@ -174,7 +199,7 @@ export default class ProjectBar extends Component {
     const collaboratorModal = (
       <Modal
         open={addCollaboratorModalOpen}
-        onClickOutside={closeAddCollaboratorModal}
+        onClickOutside={this.handleCloseAddCollaboratorModal}
         title="ADD A COLLABORATOR"
       >
         <input
@@ -184,8 +209,12 @@ export default class ProjectBar extends Component {
           placeholder="Enter an email address..."
         />
         <div style={styles.inviteButtonContainer}>
-          <Button style={styles.inviteButton}>
-            INVITE
+          <div>
+            {addCollaboratorFlags.success && 'User has been successfully added.'}
+            {addCollaboratorFlags.failure && 'User was not found.'}
+          </div>
+          <Button style={styles.inviteButton} onClick={this.handleInvite}>
+            ADD
           </Button>
         </div>
       </Modal>

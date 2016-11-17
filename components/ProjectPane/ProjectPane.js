@@ -88,7 +88,7 @@ export default class ProjectPane extends Component {
           {currentProject && <ProjectBar
             collaboratorIds={Object.keys(currentProject.collaborators)}
             style={styles.collaboratorList}
-            projectTitle={currentProject.title}
+            project={currentProject}
           />}
         </div>
         <div style={styles.cardGrid}>

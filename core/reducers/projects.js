@@ -5,6 +5,11 @@ const GET_CARD = 'is3/projects/GET_CARD';
 const CHANGE_CARD = 'is3/projects/CHANGE_CARD';
 const REMOVE_CARD = 'is3/projects/REMOVE_CARD';
 const GET_COLLABORATOR = 'is3/projects/GET_COLLABORATOR';
+const GET_UID_FROM_EMAIL = 'is3/projects/GET_UID_FROM_EMAIL';
+const ADDING_COLLABORATOR_RESET = 'is3/projects/ADDING_COLLABORATOR_RESET';
+const ADDING_COLLABORATOR_WAITING = 'is3/projects/ADDING_COLLABORATOR_WAITING';
+const ADDING_COLLABORATOR_SUCCESS = 'is3/projects/ADDING_COLLABORATOR_SUCCESS';
+const ADDING_COLLABORATOR_FAILURE = 'is3/projects/ADDING_COLLABORATOR_FAILURE';
 
 export function getProjects(uid) {
   return (dispatch) => {
@@ -123,8 +128,36 @@ export function undoDeletion(projectId) {
   });
 }
 
+export function addCollaborator(email, projectId) {
+  return dispatch => {
+    dispatch({type: ADDING_COLLABORATOR_WAITING});
+    Firebase.database().ref('users').once('value', data => {
+      const users = data.val();
+      const uid = Object.keys(users).filter(uid => users[uid].email === email)[0];
+      if (uid) {
+        Firebase.database().ref(`users/${uid}/projects/${projectId}`).set(true);
+        Firebase.database().ref(`projects/${projectId}/collaborators/${uid}`).set(true);
+        dispatch({type: ADDING_COLLABORATOR_SUCCESS});
+      } else {
+        dispatch({type: ADDING_COLLABORATOR_FAILURE});
+      }
+    });
+  }
+}
+
+export function resetAddCollaboratorFlags() {
+  return dispatch => {
+    dispatch({type: ADDING_COLLABORATOR_RESET});
+  };
+}
+
 const initialState = {
   collaborators: {},
+  addCollaboratorFlags: {
+    waiting: false,
+    success: false,
+    failure: false,
+  },
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -167,6 +200,42 @@ export default function reducer(state = initialState, action = {}) {
           ...state.collaborators,
           [action.data.uid]: action.data,
         }
+      };
+    case ADDING_COLLABORATOR_RESET:
+      return {
+        ...state,
+        addCollaboratorFlags: {
+          waiting: false,
+          success: false,
+          failure: false,
+        },
+      };
+    case ADDING_COLLABORATOR_WAITING:
+      return {
+        ...state,
+        addCollaboratorFlags: {
+          waiting: true,
+          success: false,
+          failure: false,
+        },
+      };
+    case ADDING_COLLABORATOR_SUCCESS:
+      return {
+        ...state,
+        addCollaboratorFlags: {
+          waiting: false,
+          success: true,
+          failure: false,
+        },
+      };
+    case ADDING_COLLABORATOR_FAILURE:
+      return {
+        ...state,
+        addCollaboratorFlags: {
+          waiting: false,
+          success: false,
+          failure: true,
+        },
       };
     default:
       return state;
