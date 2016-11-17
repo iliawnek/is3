@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import TextCard from '../TextCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
-import CollaboratorList from '../ProjectBar/ProjectBar';
+import ProjectBar from '../ProjectBar/ProjectBar';
 import {changeProjectTitle} from '../../core/reducers/projects';
 import Radium from 'radium';
 import Input from '../Input';
@@ -85,9 +85,10 @@ export default class ProjectPane extends Component {
             value={title}
             placeholder="New project"
           />
-          {currentProject && <CollaboratorList
+          {currentProject && <ProjectBar
             collaboratorIds={Object.keys(currentProject.collaborators)}
             style={styles.collaboratorList}
+            projectTitle={currentProject.title}
           />}
         </div>
         <div style={styles.cardGrid}>
