@@ -52,7 +52,7 @@ export default class TextCard extends Component {
   };
 
   render() {
-    const {card, ...otherProps} = this.props;
+    const {card, user, displayNotification, hideNotification, ...otherProps} = this.props;
 
     const styles = {
       card: {

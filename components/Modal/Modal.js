@@ -11,7 +11,7 @@ export default class Modal extends Component {
   };
 
   render() {
-    const {children, style, open, title, ...otherProps} = this.props;
+    const {children, style, open, title, onClickOutside, ...otherProps} = this.props;
     if (!open) return null;
 
     const styles = {
@@ -83,7 +83,7 @@ export default class Modal extends Component {
         </div>
         <div
           style={styles.overlay}
-          onClick={this.props.onClickOutside}
+          onClick={onClickOutside}
         />
       </div>
     );
