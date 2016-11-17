@@ -23,7 +23,7 @@ export default class ProjectPane extends Component {
   render() {
     const {currentProject} = this.props;
     if (!currentProject) return null;
-
+    console.log('not reach');
     const styles = {
       header: {
         marginBottom: 24,

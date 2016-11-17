@@ -9,8 +9,9 @@ import {
   closeAddCollaboratorModal,
   openDeleteProjectModal,
   closeDeleteProjectModal,
+  openProjectsList,
 } from '../../core/reducers/ui';
-import {addCollaborator, resetAddCollaboratorFlags} from '../../core/reducers/projects';
+import {addCollaborator, resetAddCollaboratorFlags, deleteProject} from '../../core/reducers/projects';
 
 @connect(state => ({
   collaborators: state.projects.collaborators,
@@ -24,6 +25,7 @@ import {addCollaborator, resetAddCollaboratorFlags} from '../../core/reducers/pr
   closeDeleteProjectModal,
   addCollaborator,
   resetAddCollaboratorFlags,
+  openProjectsList,
 })
 export default class ProjectBar extends Component {
   static propTypes = {
@@ -40,6 +42,7 @@ export default class ProjectBar extends Component {
     addCollaborator: PropTypes.func,
     addCollaboratorFlags: PropTypes.object,
     resetAddCollaboratorFlags: PropTypes.func,
+    openProjectsList: PropTypes.func,
   };
 
   state = {
@@ -69,6 +72,12 @@ export default class ProjectBar extends Component {
     this.setState({email: ''});
   };
 
+  handleDelete = () => {
+    deleteProject(this.props.project);
+    this.props.closeDeleteProjectModal();
+    this.props.openProjectsList();
+  };
+
   componentWillReceiveProps(nextProps) {
     if ((nextProps.addCollaboratorFlags.success !== this.props.addCollaboratorFlags.success) && nextProps.addCollaboratorFlags.success) {
       this.setState({email: ''});
@@ -86,6 +95,7 @@ export default class ProjectBar extends Component {
       addCollaboratorModalOpen,
       deleteProjectModalOpen,
       addCollaboratorFlags,
+      project,
     } = this.props;
 
     const {
@@ -174,9 +184,11 @@ export default class ProjectBar extends Component {
         onClickOutside={closeDeleteProjectModal}
         title="DELETE PROJECT?"
       >
-        Are you sure you want to delete <span style={{whiteSpace: 'nowrap', fontWeight: 'bold'}}>{this.props.project.title}</span>?
+        Are you sure you want to delete <span style={{whiteSpace: 'nowrap', fontWeight: 'bold'}}>
+          {project.title ? project.title : 'New project'}
+        </span>?
         <div style={styles.deleteButtonContainer}>
-          <Button style={styles.deleteButton}>
+          <Button style={styles.deleteButton} onClick={this.handleDelete}>
             DELETE
           </Button>
         </div>

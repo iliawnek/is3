@@ -1,6 +1,7 @@
 import Firebase from 'firebase';
 
 const GET_PROJECT = 'is3/projects/GET_PROJECT';
+const REMOVE_PROJECT = 'is3/projects/REMOVE_PROJECT';
 const GET_CARD = 'is3/projects/GET_CARD';
 const CHANGE_CARD = 'is3/projects/CHANGE_CARD';
 const REMOVE_CARD = 'is3/projects/REMOVE_CARD';
@@ -18,6 +19,9 @@ export function getProjects(uid) {
       dispatch(getProject(data.key));
       dispatch(getCards(data.key));
     });
+    ref.on('child_removed', data => {
+      dispatch({type: REMOVE_PROJECT, id: data.key})
+    })
   };
 }
 
@@ -25,16 +29,18 @@ function getProject(projectId) {
   return (dispatch, getState) => {
     const ref = Firebase.database().ref(`projects/${projectId}`);
     ref.on('value', data => {
-      Object.keys(data.val().collaborators).forEach(uid => {
-        if (!getState().collaborators || !getState().collaborators[uid]) {
-          dispatch(getCollaborator(uid));
-        }
-      });
-      dispatch({
-        type: GET_PROJECT,
-        projectId,
-        data: data.val(),
-      });
+      if (data.val()) {
+        Object.keys(data.val().collaborators).forEach(uid => {
+          if (!getState().collaborators || !getState().collaborators[uid]) {
+            dispatch(getCollaborator(uid));
+          }
+        });
+        dispatch({
+          type: GET_PROJECT,
+          projectId,
+          data: data.val(),
+        });
+      }
     });
   }
 }
@@ -151,6 +157,13 @@ export function resetAddCollaboratorFlags() {
   };
 }
 
+export function deleteProject(project) {
+  Firebase.database().ref(`projects/${project.id}`).remove();
+  Object.keys(project.collaborators).forEach(uid => {
+    Firebase.database().ref(`users/${uid}/projects/${project.id}`).remove();
+  });
+}
+
 const initialState = {
   collaborators: {},
   addCollaboratorFlags: {
@@ -169,6 +182,11 @@ export default function reducer(state = initialState, action = {}) {
           ...state[action.projectId],
           ...action.data,
         },
+      };
+    case REMOVE_PROJECT:
+      return {
+        ...state,
+        [action.id]: undefined
       };
     case GET_CARD:
     case CHANGE_CARD:

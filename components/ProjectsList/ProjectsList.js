@@ -76,18 +76,19 @@ export default class ProjectsList extends Component {
       </Button>
     );
 
-    const projectsList = Object.keys(projects).filter(projectId => projectId !== 'collaborators' || projectId !== 'addCollaboratorFlags')
+    const projectsList = Object.keys(projects).filter(projectId => (projectId !== 'collaborators') && (projectId !== 'addCollaboratorFlags'))
       .map(projectId => {
-      return (
-        <Button
-          style={styles.projectsListButton}
-          key={projectId}
-          selected={projectId === currentProjectId}
-          onClick={setCurrentProjectId.bind(this, uid, projectId)}
-        >
-          {projects[projectId].title || 'New project'}
-        </Button>
-      )
+        if (!projects[projectId]) return null;
+        return (
+          <Button
+            style={styles.projectsListButton}
+            key={projectId}
+            selected={projectId === currentProjectId}
+            onClick={setCurrentProjectId.bind(this, uid, projectId)}
+          >
+            {projects[projectId].title || 'New project'}
+          </Button>
+        )
     });
 
     return (
