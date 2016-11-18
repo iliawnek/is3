@@ -5,6 +5,9 @@ const REMOVE_PROJECT = 'is3/projects/REMOVE_PROJECT';
 const GET_CARD = 'is3/projects/GET_CARD';
 const CHANGE_CARD = 'is3/projects/CHANGE_CARD';
 const REMOVE_CARD = 'is3/projects/REMOVE_CARD';
+const GET_TASK = 'is3/projects/GET_TASK';
+const CHANGE_TASK = 'is3/projects/CHANGE_TASK';
+const REMOVE_TASK = 'is3/projects/REMOVE_TASK';
 const GET_COLLABORATOR = 'is3/projects/GET_COLLABORATOR';
 const GET_UID_FROM_EMAIL = 'is3/projects/GET_UID_FROM_EMAIL';
 const ADDING_COLLABORATOR_RESET = 'is3/projects/ADDING_COLLABORATOR_RESET';
@@ -60,12 +63,18 @@ function getCards(projectId) {
   return (dispatch) => {
     const ref = Firebase.database().ref(`cards/${projectId}`);
     ref.on('child_added', (data) => {
+      const cardId = data.key;
       dispatch({
         type: GET_CARD,
         projectId,
-        cardId: data.key,
+        cardId,
         data: data.val(),
-      })
+      });
+      console.log(data.val());
+      if (data.val().type === 'checklist') {
+        console.log('test');
+        dispatch(getTasks(projectId, cardId))
+      }
     });
     ref.on('child_changed', (data) => {
       dispatch({
@@ -83,6 +92,37 @@ function getCards(projectId) {
       })
     });
   };
+}
+
+function getTasks(projectId, cardId) {
+  return dispatch => {
+    Firebase.database().ref(`tasks/${cardId}`).on('child_added', (data) => {
+      dispatch({
+        type: GET_TASK,
+        projectId,
+        cardId,
+        taskId: data.key,
+        data: data.val(),
+      });
+    });
+    Firebase.database().ref(`tasks/${cardId}`).on('child_changed', (data) => {
+      dispatch({
+        type: CHANGE_TASK,
+        projectId,
+        cardId,
+        taskId: data.key,
+        data: data.val(),
+      });
+    });
+    Firebase.database().ref(`tasks/${cardId}`).on('child_removed', (data) => {
+      dispatch({
+        projectId,
+        cardId,
+        type: REMOVE_TASK,
+        id: data.key,
+      });
+    });
+  }
 }
 
 export function createProject(uid) {
@@ -109,6 +149,33 @@ export function createTextCard(projectId) {
     projectId,
     id: newCardRef.key,
   });
+}
+
+export function createChecklistCard(projectId) {
+  const projectRef = Firebase.database().ref(`cards/${projectId}`);
+  const newCardRef = projectRef.push();
+  newCardRef.set({
+    type: 'checklist',
+    projectId,
+    id: newCardRef.key,
+  });
+  const newTaskRef = Firebase.database().ref(`tasks/${newCardRef.key}`).push();
+  newTaskRef.set({
+    id: newTaskRef.key,
+    checked: false,
+  });
+}
+
+export function completeTask(cardId, taskId) {
+  Firebase.database().ref(`tasks/${cardId}/${taskId}/checked`).set(true);
+}
+
+export function uncompleteTask(cardId, taskId) {
+  Firebase.database().ref(`tasks/${cardId}/${taskId}/checked`).set(false);
+}
+
+export function changeTaskTitle(cardId, taskId, newTitle) {
+  Firebase.database().ref(`tasks/${cardId}/${taskId}/title`).set(newTitle);
 }
 
 export function changeCardTitle(card, newTitle) {
@@ -196,7 +263,10 @@ export default function reducer(state = initialState, action = {}) {
           ...state[action.projectId],
           cards: {
             ...state[action.projectId].cards,
-            [action.cardId]: action.data,
+            [action.cardId]: {
+              tasks: state[action.projectId].cards && state[action.projectId].cards[action.cardId].tasks,
+              ...action.data,
+            },
           },
         },
       };
@@ -208,6 +278,41 @@ export default function reducer(state = initialState, action = {}) {
           cards: {
             ...state[action.projectId].cards,
             [action.cardId]: undefined,
+          },
+        },
+      };
+    case GET_TASK:
+    case CHANGE_TASK:
+      return {
+        ...state,
+        [action.projectId]: {
+          ...state[action.projectId],
+          cards: {
+            ...state[action.projectId].cards,
+            [action.cardId]: {
+              ...state[action.projectId].cards[action.cardId],
+              tasks: {
+                ...state[action.projectId].cards[action.cardId].tasks,
+                [action.taskId]: action.data,
+              }
+            },
+          },
+        },
+      };
+    case REMOVE_TASK:
+      return {
+        ...state,
+        [action.projectId]: {
+          ...state[action.projectId],
+          cards: {
+            ...state[action.projectId].cards,
+            [action.cardId]: {
+              ...state[action.projectId].cards[action.cardId],
+              tasks: {
+                ...state[action.projectId].cards[action.cardId].tasks,
+                [action.taskId]: undefined,
+              }
+            },
           },
         },
       };

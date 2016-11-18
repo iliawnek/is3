@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import TextCard from '../TextCard';
+import ChecklistCard from '../ChecklistCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
 import ProjectBar from '../ProjectBar/ProjectBar';
 import {changeProjectTitle} from '../../core/reducers/projects';
@@ -57,9 +58,11 @@ export default class ProjectPane extends Component {
     let cards = (
       currentProject && currentProject.cards && Object.values(currentProject.cards).map((card) => {
         if (card === undefined) return null;
-        return (
-          <TextCard card={card} key={card.id}/>
-        );
+        if (card.type === 'text') {
+          return <TextCard card={card} key={card.id}/>;
+        } else if (card.type === 'checklist') {
+          return <ChecklistCard card={card} key={card.id}/>;
+        }
       })
     );
 

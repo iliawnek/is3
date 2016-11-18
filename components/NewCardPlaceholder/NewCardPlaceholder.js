@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import Button from '../Button';
-import {createTextCard} from '../../core/reducers/projects';
+import {createTextCard, createChecklistCard} from '../../core/reducers/projects';
 
 export default class NewCardPlaceholder extends Component {
   static propTypes = {
@@ -20,7 +20,7 @@ export default class NewCardPlaceholder extends Component {
     if (type === 'text') {
       createTextCard(projectId);
     } else if (type === 'checklist') {
-
+      createChecklistCard(projectId);
     } else if (type === 'image') {
 
     } else if (type === 'video') {
@@ -65,7 +65,6 @@ export default class NewCardPlaceholder extends Component {
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: '#CCC',
-        // border: '2px solid #CCC',
         color: 'white',
         margin: 8,
       },
