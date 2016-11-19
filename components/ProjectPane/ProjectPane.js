@@ -7,6 +7,7 @@ import ProjectBar from '../ProjectBar/ProjectBar';
 import {changeProjectTitle} from '../../core/reducers/projects';
 import Radium from 'radium';
 import Input from '../Input';
+import arrow from './arrow.png';
 
 @connect(state => ({
   currentProject: state.ui.currentProjectId && state.projects && state.projects[state.ui.currentProjectId],
@@ -23,7 +24,7 @@ export default class ProjectPane extends Component {
 
   render() {
     const {currentProject} = this.props;
-    if (!currentProject) return null;
+
     const styles = {
       header: {
         marginBottom: 24,
@@ -52,8 +53,32 @@ export default class ProjectPane extends Component {
         flexWrap: 'wrap',
         justifyContent: 'center',
         width: '100%',
-      }
+      },
+      arrow: {
+        position: 'absolute',
+        width: 100,
+        marginTop: 20,
+        marginLeft: -18,
+      },
+      helpText: {
+        position: 'absolute',
+        top: 128,
+        left: 95,
+        width: 140,
+        height: 200,
+        lineHeight: 1.5,
+        fontSize: 14,
+      },
     };
+
+    if (!currentProject) return (
+      <div>
+        <img style={styles.arrow} src={arrow}/>
+        <div style={styles.helpText}>
+          Click here to create or select a project.
+        </div>
+      </div>
+    );
 
     let cards = (
       currentProject && currentProject.cards && Object.values(currentProject.cards).map((card) => {

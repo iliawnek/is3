@@ -5,6 +5,7 @@ import Drawer from '../Drawer';
 import Button from '../Button';
 import {setCurrentProjectId, closeProjectsList} from '../../core/reducers/ui';
 import {createProject} from '../../core/reducers/projects';
+import arrow from './arrow.png';
 
 @connect(state => ({
   uid: state.auth.user && state.auth.user.uid,
@@ -66,7 +67,24 @@ export default class ProjectsList extends Component {
         backgroundColor: 'transparent',
         color: '#444',
         justifyContent: 'space-between',
-      }
+      },
+      arrow: {
+        position: 'absolute',
+        width: 100,
+        marginTop: 0,
+        marginLeft: 305,
+        transform: 'scaleX(-1)',
+      },
+      helpText: {
+        position: 'absolute',
+        top: 128,
+        left: 125,
+        width: 160,
+        height: 200,
+        lineHeight: 1.5,
+        fontSize: 14,
+        textAlign: 'right',
+      },
     };
 
     const createProjectButton = (
@@ -95,7 +113,9 @@ export default class ProjectsList extends Component {
             {projects[projectId].title || 'New project'}
           </Button>
         )
-    });
+    }).filter(item => item !== null);
+
+    console.log(projectsList);
 
     return (
       <Drawer
@@ -110,6 +130,12 @@ export default class ProjectsList extends Component {
         </div>
         {projectsList}
         <ReactTooltip id="create-project" place="right" effect="solid"/>
+        {projectsList.length === 0 && <div>
+          <img src={arrow} style={styles.arrow}/>
+          <div style={styles.helpText}>
+            Click here to<br/>create a new project.
+          </div>
+        </div>}
       </Drawer>
     );
   }
