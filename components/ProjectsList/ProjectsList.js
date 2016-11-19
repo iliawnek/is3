@@ -25,6 +25,12 @@ export default class ProjectsList extends Component {
   handleCreateProject = () => {
     const newProjectId = createProject(this.props.uid);
     setCurrentProjectId(this.props.uid, newProjectId);
+    this.props.closeProjectsList();
+  };
+
+  handleProjectSelection = (projectId) => {
+    setCurrentProjectId(this.props.uid, projectId);
+    this.props.closeProjectsList();
   };
 
   render() {
@@ -84,7 +90,7 @@ export default class ProjectsList extends Component {
             style={styles.projectsListButton}
             key={projectId}
             selected={projectId === currentProjectId}
-            onClick={setCurrentProjectId.bind(this, uid, projectId)}
+            onClick={this.handleProjectSelection.bind(this, projectId)}
           >
             {projects[projectId].title || 'New project'}
           </Button>
