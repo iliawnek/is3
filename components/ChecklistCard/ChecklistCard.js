@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Card from '../Card';
 import ChecklistItem from './ChecklistItem';
 import Button from '../Button';
-import {changeCardTitle, deleteCard, undoDeletion, completeTask, uncompleteTask, changeTaskTitle} from '../../core/reducers/projects';
+import {changeCardTitle, deleteCard, undoDeletion, completeTask, uncompleteTask, changeTaskTitle, createTask} from '../../core/reducers/projects';
 import {displayNotification, hideNotification} from '../../core/reducers/ui';
 
 @connect(state => ({user: state.auth.user}), {displayNotification, hideNotification})
@@ -12,6 +12,11 @@ export default class ChecklistCard extends Component {
     card: PropTypes.object,
     user: PropTypes.object,
   };
+
+  state = {};
+
+  handleMouseEnter = () => this.setState({hovering: true});
+  handleMouseLeave = () => this.setState({hovering: false});
 
   handleTitleChange = (event) => {
     if (event.target.value !== this.props.card.title) {
@@ -44,7 +49,15 @@ export default class ChecklistCard extends Component {
     });
   };
 
+  handleCreateTask = () => {
+    createTask(this.props.card.id);
+    this.checklist.scrollTop = this.checklist.scrollHeight;
+  };
+
+  checklist;
+
   render() {
+    const {hovering} = this.state;
     const {card, user, displayNotification, hideNotification, ...otherProps} = this.props;
 
     const styles = {
@@ -77,6 +90,26 @@ export default class ChecklistCard extends Component {
         fill: '#ccc'
       },
       checklist: {
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        maxHeight: 242,
+      },
+      newTaskButton: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 18,
+        width: 18,
+        marginRight: 8,
+        border: '2px solid #666',
+        backgroundColor: hovering ? '#666' : 'transparent',
+        borderRadius: '50%',
+        cursor: 'pointer',
+        marginTop: 8,
+        marginBottom: 8,
+      },
+      newTaskIcon: {
+        fill: hovering ? 'white' : '#444',
       },
     };
 
@@ -91,6 +124,14 @@ export default class ChecklistCard extends Component {
       </Button>
     );
 
+    const newTaskButton = (
+      <div style={styles.newTaskButton} onClick={this.handleCreateTask} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
+        <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path style={styles.newTaskIcon} d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+      </div>
+    );
+
     return (
       <Card style={styles.card} {...otherProps}>
         <div style={styles.header}>
@@ -102,7 +143,7 @@ export default class ChecklistCard extends Component {
           />
           {closeButton}
         </div>
-        <div style={styles.checklist}>
+        <div ref={(div) => this.checklist = div} style={styles.checklist}>
           {card && card.tasks && Object.keys(card.tasks).map(id =>
             <ChecklistItem
               task={card.tasks[id]}
@@ -112,6 +153,7 @@ export default class ChecklistCard extends Component {
               handleUncompleteTask={this.handleUncompleteTask}
             />
           )}
+          {newTaskButton}
         </div>
       </Card>
     );

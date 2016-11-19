@@ -166,6 +166,14 @@ export function createChecklistCard(projectId) {
   });
 }
 
+export function createTask(cardId) {
+  const newTaskRef = Firebase.database().ref(`tasks/${cardId}`).push();
+  newTaskRef.set({
+    id: newTaskRef.key,
+    checked: false,
+  })
+}
+
 export function completeTask(cardId, taskId) {
   Firebase.database().ref(`tasks/${cardId}/${taskId}/checked`).set(true);
 }
@@ -264,7 +272,7 @@ export default function reducer(state = initialState, action = {}) {
           cards: {
             ...state[action.projectId].cards,
             [action.cardId]: {
-              tasks: state[action.projectId].cards && state[action.projectId].cards[action.cardId].tasks,
+              tasks: state[action.projectId].cards && state[action.projectId].cards[action.cardId] && state[action.projectId].cards[action.cardId].tasks,
               ...action.data,
             },
           },

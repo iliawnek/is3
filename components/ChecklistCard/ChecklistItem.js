@@ -8,6 +8,8 @@ export default class ChecklistItem extends Component {
     handleUncompleteTask: PropTypes.func,
   };
 
+  state = {hovering: false};
+
   handleTaskTitleChange = (event) => {
     this.props.handleTaskTitleChange(this.props.task.id, event.target.value);
   };
@@ -20,8 +22,18 @@ export default class ChecklistItem extends Component {
     this.props.handleUncompleteTask(this.props.task.id);
   };
 
+  handleMouseEnter = () => this.setState({hovering: true});
+  handleMouseLeave = () => this.setState({hovering: false});
+
   render() {
-    const {task, handleTaskTitleChange, handleCompleteTask, handleUncompleteTask, ...otherProps} = this.props;
+    const {hovering} = this.state;
+    const {
+      task,
+      handleTaskTitleChange,
+      handleCompleteTask,
+      handleUncompleteTask,
+      ...otherProps,
+    } = this.props;
 
     const styles = {
       task: {
@@ -35,18 +47,19 @@ export default class ChecklistItem extends Component {
         width: 18,
         marginRight: 8,
         border: '2px solid #666',
-        borderRadius: '50%',
         boxSizing: 'border-box',
       },
-      checked: {
+      checkCircle: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         height: 18,
         width: 18,
         marginRight: 8,
-        backgroundColor: '#666',
+        border: '2px solid #666',
+        backgroundColor: task.checked ? '#666' : 'transparent',
         borderRadius: '50%',
+        cursor: 'pointer',
       },
       title: {
         fontSize: 14,
@@ -56,24 +69,24 @@ export default class ChecklistItem extends Component {
         border: 'none',
         textOverflow: 'ellipsis',
         width: 'calc(100% - 36px)',
+        textDecoration: task.checked ? 'line-through' : 'none',
+        color: task.checked ? '#aaa' : '#444',
       },
     };
 
     return (
       <div style={styles.task} {...otherProps}>
-        {!task.checked && <div
-          style={styles.unchecked}
-          onClick={this.handleCompleteTask}
-        />}
-        {task.checked && <div
-          style={styles.checked}
-          onClick={this.handleUncompleteTask}
+        <div
+          style={styles.checkCircle}
+          onClick={task.checked ? this.handleUncompleteTask : this.handleCompleteTask}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
         >
-          <svg fill="white" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg">
+          {(task.checked || hovering) && <svg fill={(hovering && !task.checked) ? '#666' : 'white'} height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 0h24v24H0z" fill="none"/>
             <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
-          </svg>
-        </div>}
+          </svg>}
+        </div>
         <input
           style={styles.title}
           onChange={this.handleTaskTitleChange}
