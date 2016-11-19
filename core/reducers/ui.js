@@ -2,8 +2,6 @@ import Firebase from 'firebase';
 
 const OPEN_PROJECTS_LIST = 'is3/ui/OPEN_PROJECTS_LIST';
 const CLOSE_PROJECTS_LIST = 'is3/ui/CLOSE_PROJECTS_LIST';
-const OPEN_ACTIVITY_LOG = 'is3/ui/OPEN_ACTIVITY_LOG';
-const CLOSE_ACTIVITY_LOG = 'is3/ui/CLOSE_ACTIVITY_LOG';
 const OPEN_ADD_COLLABORATOR_MODAL = 'is3/ui/OPEN_ADD_COLLABORATOR_MODAL';
 const CLOSE_ADD_COLLABORATOR_MODAL = 'is3/ui/CLOSE_ADD_COLLABORATOR_MODAL';
 const OPEN_DELETE_PROJECT_MODAL = 'is3/ui/OPEN_DELETE_PROJECT_MODAL';
@@ -17,12 +15,6 @@ export function openProjectsList() {
 }
 export function closeProjectsList() {
   return {type: CLOSE_PROJECTS_LIST};
-}
-export function openActivityLog() {
-  return {type: OPEN_ACTIVITY_LOG};
-}
-export function closeActivityLog() {
-  return {type: CLOSE_ACTIVITY_LOG};
 }
 export function openAddCollaboratorModal() {
   return {type: OPEN_ADD_COLLABORATOR_MODAL};
@@ -73,7 +65,6 @@ export function hideNotification() {
 
 const initialState = {
   projectsListOpen: false,
-  activityLogOpen: false,
   addCollaboratorModalOpen: false,
   deleteProjectModalOpen: false,
   currentProjectId: null,
@@ -90,16 +81,6 @@ export default function ui(state = initialState, action = {}) {
       return {
         ...state,
         projectsListOpen: false,
-      };
-    case OPEN_ACTIVITY_LOG:
-      return {
-        ...state,
-        activityLogOpen: true,
-      };
-    case CLOSE_ACTIVITY_LOG:
-      return {
-        ...state,
-        activityLogOpen: false,
       };
     case OPEN_ADD_COLLABORATOR_MODAL:
       return {

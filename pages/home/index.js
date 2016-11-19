@@ -12,7 +12,6 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Layout from '../../components/Layout';
 import ProjectsList from '../../components/ProjectsList';
-import ActivityLog from '../../components/ActivityLog';
 import ProjectPane from '../../components/ProjectPane';
 import Button from '../../components/Button';
 import {getUser, signIn} from '../../core/reducers/auth';
@@ -109,7 +108,6 @@ class HomePage extends React.Component {
         <Layout>
           <ProjectsList/>
           <ProjectPane/>
-          <ActivityLog/>
           <Notification
             message=""
             isActive={false}
