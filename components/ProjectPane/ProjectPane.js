@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import TextCard from '../TextCard';
 import ChecklistCard from '../ChecklistCard';
 import ImageCard from '../ImageCard';
+import VideoCard from '../VideoCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
 import ProjectBar from '../ProjectBar/ProjectBar';
 import {changeProjectTitle} from '../../core/reducers/projects';
@@ -91,6 +92,8 @@ export default class ProjectPane extends Component {
           return <ChecklistCard card={card} key={card.id}/>;
         } else if (card.type === 'image') {
           return <ImageCard card={card} key={card.id}/>;
+        } else if (card.type === 'video') {
+          return <VideoCard card={card} key={card.id}/>;
         }
       })
     );

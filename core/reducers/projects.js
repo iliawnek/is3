@@ -183,6 +183,25 @@ export function createImageCard(projectId, file) {
   });
 }
 
+export function createVideoCard(projectId, file) {
+  const projectRef = Firebase.database().ref(`cards/${projectId}`);
+  const newCardRef = projectRef.push();
+  const storageRef = Firebase.storage().ref();
+  const uploadTask = storageRef.child(newCardRef.key).put(file);
+  newCardRef.set({
+    type: 'video',
+    projectId,
+    id: newCardRef.key,
+    title: file.name,
+    uploadPercentage: 0,
+  }).then(() => {
+    uploadTask.on('state_changed', snapshot => {
+      const uploadPercentage = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      newCardRef.update({uploadPercentage});
+    });
+  });
+}
+
 export function createTask(cardId) {
   const newTaskRef = Firebase.database().ref(`tasks/${cardId}`).push();
   newTaskRef.set({
