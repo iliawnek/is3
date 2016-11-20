@@ -168,12 +168,17 @@ export function createImageCard(projectId, file) {
   const projectRef = Firebase.database().ref(`cards/${projectId}`);
   const newCardRef = projectRef.push();
   const storageRef = Firebase.storage().ref();
-  storageRef.child(newCardRef.key).put(file).then(() => {
-    newCardRef.set({
-      type: 'image',
-      projectId,
-      id: newCardRef.key,
-      title: file.name,
+  const uploadTask = storageRef.child(newCardRef.key).put(file);
+  newCardRef.set({
+    type: 'image',
+    projectId,
+    id: newCardRef.key,
+    title: file.name,
+    uploadPercentage: 0,
+  }).then(() => {
+    uploadTask.on('state_changed', snapshot => {
+      const uploadPercentage = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      newCardRef.update({uploadPercentage});
     });
   });
 }

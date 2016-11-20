@@ -6,6 +6,7 @@ import Firebase from 'firebase';
 import {changeCardTitle, deleteCard, undoDeletion} from '../../core/reducers/projects';
 import {displayNotification, hideNotification} from '../../core/reducers/ui';
 import Lightbox from 'react-image-lightbox';
+import {Circle} from 'rc-progress';
 
 @connect(state => ({user: state.auth.user}), {displayNotification, hideNotification})
 export default class ImageCard extends Component {
@@ -20,13 +21,15 @@ export default class ImageCard extends Component {
   };
 
   componentWillMount() {
-    Firebase.storage().ref(this.props.card.id).getDownloadURL().then(url => {
-      this.setState({image: url});
-    });
+    if (this.props.card.uploadPercentage === 100) {
+      Firebase.storage().ref(this.props.card.id).getDownloadURL().then(url => {
+        this.setState({image: url});
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.card !== this.props.card) {
+    if (nextProps.card !== this.props.card && nextProps.card.uploadPercentage === 100) {
       Firebase.storage().ref(nextProps.card.id).getDownloadURL().then(url => {
         this.setState({image: url});
       });
@@ -102,6 +105,26 @@ export default class ImageCard extends Component {
         padding: 0,
         backgroundColor: 'transparent',
       },
+      progress: {
+        width: 150,
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+      },
+      progressContainer: {
+        position: 'relative',
+        width: '100%',
+        height: 'calc(100% - 80px)',
+      },
+      percentage: {
+        color: '#444',
+        fontSize: 32,
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+      }
     };
 
     const closeButton = (
@@ -126,6 +149,18 @@ export default class ImageCard extends Component {
           />
           {closeButton}
         </div>
+
+        {card.uploadPercentage !== 100 && <div style={styles.progressContainer}>
+          <Circle
+            percent={card.uploadPercentage}
+            strokeWidth={6}
+            strokeColor="#E73F3F"
+            strokeLinecap="square"
+            style={styles.progress}
+          />
+          <div style={styles.percentage}>{card.uploadPercentage}%</div>
+        </div>}
+
         {image && (
           <Button
             style={styles.imageContainer}
@@ -137,6 +172,7 @@ export default class ImageCard extends Component {
             />
           </Button>
         )}
+
         {lightboxOpen && <Lightbox
           mainSrc={image}
           onCloseRequest={() => this.setState({lightboxOpen: false})}
