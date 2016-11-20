@@ -120,8 +120,8 @@ class HomePage extends React.Component {
     return (
       <div style={styles.landing}>
         <div style={styles.content}>
-          <div style={styles.title}>WEBAPP NAME</div>
-          <div style={styles.subtitle}>This is a subtitle.</div>
+          <div style={styles.title}>IS3 - TEAM Q</div>
+          <div style={styles.subtitle}>Project management with real-time collaboration.</div>
           <Button
             onClick={this.props.signIn}
             style={styles.signInButton}

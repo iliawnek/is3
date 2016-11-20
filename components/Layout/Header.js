@@ -94,7 +94,7 @@ class Header extends React.Component {
       <div style={styles.header}>
         <div style={styles.headerSection}>
           {projectsButton}
-          <div style={styles.webappName}>WEBAPP NAME</div>
+          <div style={styles.webappName}>IS3 - TEAM Q</div>
         </div>
         <div style={styles.headerSection}>
           <UserButton/>
