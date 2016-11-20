@@ -173,6 +173,7 @@ export function createImageCard(projectId, file) {
       type: 'image',
       projectId,
       id: newCardRef.key,
+      title: file.name,
     });
   });
 }
