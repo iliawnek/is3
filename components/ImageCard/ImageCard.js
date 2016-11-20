@@ -7,30 +7,29 @@ import {changeCardTitle, deleteCard, undoDeletion} from '../../core/reducers/pro
 import {displayNotification, hideNotification} from '../../core/reducers/ui';
 
 @connect(state => ({user: state.auth.user}), {displayNotification, hideNotification})
-export default class TextCard extends Component {
+export default class ImageCard extends Component {
   static propTypes = {
     card: PropTypes.object,
     user: PropTypes.object,
-    displayNotification: PropTypes.func,
-    hideNotification: PropTypes.func,
   };
 
-  componentDidMount() {
-    const {card, user} = this.props;
+  state = {
+    image: null,
+  };
 
-    const textRef = Firebase.database().ref(`firepad/${card.id}`);
-    const textCodeMirror = CodeMirror(this.textDiv, {
-      lineWrapping: true,
-      viewportMargin: Infinity,
-      placeholder: "Start typing here..."
-    });
-    Firepad.fromCodeMirror(textRef, textCodeMirror, {
-      richTextShortcuts: true,
-      userId: user.uid,
+  componentWillMount() {
+    Firebase.storage().ref(this.props.card.id).getDownloadURL().then(url => {
+      this.setState({image: url});
     });
   }
 
-  textDiv;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.card !== this.props.card) {
+      Firebase.storage().ref(nextProps.card.id).getDownloadURL().then(url => {
+        this.setState({image: url});
+      });
+    }
+  }
 
   handleTitleChange = (event) => {
     if (event.target.value !== this.props.card.title) {
@@ -42,7 +41,7 @@ export default class TextCard extends Component {
     const {card} = this.props;
     deleteCard(card);
     this.props.displayNotification({
-      message: `\'${card.title || 'New text card'}\' has been removed.`,
+      message: `\'${card.title || 'New checklist card'}\' has been removed.`,
       action: 'UNDO',
       onClick: () => {
         undoDeletion(card.projectId);
@@ -52,17 +51,24 @@ export default class TextCard extends Component {
   };
 
   render() {
+    const {image} = this.state;
     const {card, user, displayNotification, hideNotification, ...otherProps} = this.props;
 
     const styles = {
       card: {
         flexDirection: 'column',
         boxSizing: 'border-box',
+        padding: 0,
       },
       header: {
+        paddingTop: 24,
+        paddingLeft: 24,
+        paddingRight: 24,
+        paddingBottom: 16,
+        boxSizing: 'border-box',
         width: '100%',
         display: 'flex',
-
+        borderBottom: '1px solid #ccc',
       },
       title: {
         fontSize: 18,
@@ -74,10 +80,6 @@ export default class TextCard extends Component {
         textOverflow: 'ellipsis',
         width: 'calc(100% - 40px)',
       },
-      text: {
-        marginTop: 8,
-        height: 242,
-      },
       closeButton: {
         padding: 0,
         backgroundColor: 'transparent',
@@ -86,6 +88,11 @@ export default class TextCard extends Component {
       },
       closeIcon: {
         fill: '#ccc'
+      },
+      image: {
+        objectFit: 'cover',
+        width: '100%',
+        height: 'calc(100% - 80px)',
       },
     };
 
@@ -100,6 +107,8 @@ export default class TextCard extends Component {
       </Button>
     );
 
+    console.log(image);
+
     return (
       <Card style={styles.card} {...otherProps}>
         <div style={styles.header}>
@@ -107,13 +116,11 @@ export default class TextCard extends Component {
             style={styles.title}
             onChange={this.handleTitleChange}
             value={card.title}
-            placeholder="New text card"
+            placeholder="New image card"
           />
           {closeButton}
         </div>
-        <div style={styles.text} className="Firepad-text" ref={(div) => {
-          this.textDiv = div;
-        }}/>
+        {image && <img style={styles.image} src={image}/>}
       </Card>
     );
   }

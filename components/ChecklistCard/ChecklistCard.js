@@ -40,7 +40,7 @@ export default class ChecklistCard extends Component {
     const {card} = this.props;
     deleteCard(card);
     this.props.displayNotification({
-      message: `\'${card.title || 'New checklist card'}\' has been deleted.`,
+      message: `\'${card.title || 'New checklist card'}\' has been removed.`,
       action: 'UNDO',
       onClick: () => {
         undoDeletion(card.projectId);

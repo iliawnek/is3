@@ -115,8 +115,6 @@ export default class ProjectsList extends Component {
         )
     }).filter(item => item !== null);
 
-    console.log(projectsList);
-
     return (
       <Drawer
         open={projectsListOpen}

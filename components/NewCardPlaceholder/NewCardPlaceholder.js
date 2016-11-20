@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import Button from '../Button';
-import {createTextCard, createChecklistCard} from '../../core/reducers/projects';
+import {createTextCard, createChecklistCard, createImageCard} from '../../core/reducers/projects';
 
 export default class NewCardPlaceholder extends Component {
   static propTypes = {
@@ -9,27 +9,48 @@ export default class NewCardPlaceholder extends Component {
 
   state = {
     showOptions: false,
+    hoveringImage: false,
+    hoveringVideo: false,
   };
 
   chooseCardType = () => {
     this.setState({showOptions: true});
   };
 
-  createCard = (projectId, type) => {
+  createCard = (projectId, type, file) => {
     this.setState({showOptions: false});
     if (type === 'text') {
       createTextCard(projectId);
     } else if (type === 'checklist') {
       createChecklistCard(projectId);
     } else if (type === 'image') {
-
+      createImageCard(projectId, file);
     } else if (type === 'video') {
 
     }
   };
 
+  handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      this.createCard(this.props.projectId, 'image', file);
+    }
+  };
+
+  handleVideoUpload = (event) => {
+    // this.createCard(this.props.projectId, 'video');
+  };
+
+  handleMouseEnterImage = () => this.setState({hoveringImage: true});
+  handleMouseLeaveImage = () => this.setState({hoveringImage: false});
+  handleMouseEnterVideo = () => this.setState({hoveringVideo: true});
+  handleMouseLeaveVideo = () => this.setState({hoveringVideo: false});
+
+  imageInput;
+  videoInput;
+
   render() {
-    const {showOptions} = this.state;
+    const {showOptions, hoveringImage, hoveringVideo} = this.state;
     const {projectId, ...otherProps} = this.props;
 
     const styles = {
@@ -63,10 +84,13 @@ export default class NewCardPlaceholder extends Component {
         height: 120,
         display: 'flex',
         flexDirection: 'column',
+        position: 'relative',
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#CCC',
         color: 'white',
         margin: 8,
+        cursor: 'pointer',
       },
       optionButtonContainer: {
         display: 'flex',
@@ -86,6 +110,40 @@ export default class NewCardPlaceholder extends Component {
       title: {
         color: '#BBB',
         marginBottom: 8,
+      },
+      input: {
+        width: 0.1,
+        height: 0.1,
+        opacity: 0,
+        overflow: 'hidden',
+        position: 'absolute',
+        zIndex: -1,
+      },
+      imageUploader: {
+        // position: 'absolute',
+        // width: '100%',
+        // height: '100%',
+        // top: 0,
+        // left: 0,
+        zIndex: 50,
+      },
+      imageOverlay: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+        backgroundColor: hoveringImage ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+        transition: 'background-color 0.2s ease-in-out',
+      },
+      videoOverlay: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+        backgroundColor: hoveringVideo ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+        transition: 'background-color 0.2s ease-in-out',
       },
     };
 
@@ -120,24 +178,57 @@ export default class NewCardPlaceholder extends Component {
               </svg>
               <span style={styles.optionLabel}>TEXT</span>
             </Button>
+
             <Button style={styles.optionButton} onClick={this.createCard.bind(this, projectId, 'checklist')}>
               <svg style={styles.optionIcon} height="36" viewBox="0 0 24 24" width="36" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
               </svg>
               <span style={styles.optionLabel}>CHECKLIST</span>
             </Button>
-            <Button style={styles.optionButton} onClick={this.createCard.bind(this, projectId, 'image')}>
+
+            <input
+              ref={input => this.imageInput = input}
+              type="file"
+              id="image-upload"
+              onChange={this.handleImageUpload}
+              style={styles.input}
+              accept="image/*"
+            />
+            <label
+              htmlFor="image-upload"
+              style={styles.optionButton}
+              onMouseEnter={this.handleMouseEnterImage}
+              onMouseLeave={this.handleMouseLeaveImage}
+              onChange={this.handleImageUpload}
+            >
               <svg style={styles.optionIcon} height="36" viewBox="0 0 24 24" width="36" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z"/>
               </svg>
               <span style={styles.optionLabel}>IMAGE</span>
-            </Button>
-            <Button style={styles.optionButton} onClick={this.createCard.bind(this, projectId, 'video')}>
+              <div style={styles.imageOverlay}/>
+            </label>
+
+            <input
+              ref={input => this.videoInput = input}
+              type="file"
+              id="video-upload"
+              onChange={this.handleImageUpload}
+              style={styles.input}
+              accept="video/*"
+            />
+            <label
+              htmlFor="video-upload"
+              style={styles.optionButton}
+              onMouseEnter={this.handleMouseEnterVideo}
+              onMouseLeave={this.handleMouseLeaveVideo}
+              onChange={this.handleVideoUpload}
+            >
               <svg style={styles.optionIcon} height="36" viewBox="0 0 24 24" width="36" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
               </svg>
               <span style={styles.optionLabel}>VIDEO</span>
-            </Button>
+              <div style={styles.videoOverlay}/>
+            </label>
           </div>
         </div>
       )

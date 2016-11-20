@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import TextCard from '../TextCard';
 import ChecklistCard from '../ChecklistCard';
+import ImageCard from '../ImageCard';
 import NewCardPlaceholder from '../NewCardPlaceholder';
 import ProjectBar from '../ProjectBar/ProjectBar';
 import {changeProjectTitle} from '../../core/reducers/projects';
@@ -11,6 +12,7 @@ import arrow from './arrow.png';
 
 @connect(state => ({
   currentProject: state.ui.currentProjectId && state.projects && state.projects[state.ui.currentProjectId],
+  checkedForUser: state.auth.checkedForUser,
 }))
 
 @Radium
@@ -23,7 +25,7 @@ export default class ProjectPane extends Component {
   };
 
   render() {
-    const {currentProject} = this.props;
+    const {currentProject, checkedForUser} = this.props;
 
     const styles = {
       header: {
@@ -87,6 +89,8 @@ export default class ProjectPane extends Component {
           return <TextCard card={card} key={card.id}/>;
         } else if (card.type === 'checklist') {
           return <ChecklistCard card={card} key={card.id}/>;
+        } else if (card.type === 'image') {
+          return <ImageCard card={card} key={card.id}/>;
         }
       })
     );

@@ -70,9 +70,7 @@ function getCards(projectId) {
         cardId,
         data: data.val(),
       });
-      console.log(data.val());
       if (data.val().type === 'checklist') {
-        console.log('test');
         dispatch(getTasks(projectId, cardId))
       }
     });
@@ -163,6 +161,18 @@ export function createChecklistCard(projectId) {
   newTaskRef.set({
     id: newTaskRef.key,
     checked: false,
+  });
+}
+
+export function createImageCard(projectId, file) {
+  const projectRef = Firebase.database().ref(`cards/${projectId}`);
+  const newCardRef = projectRef.push();
+  const storageRef = Firebase.storage().ref();
+  const uploadTask = storageRef.child(newCardRef.key).put(file);
+  newCardRef.set({
+    type: 'image',
+    projectId,
+    id: newCardRef.key,
   });
 }
 
