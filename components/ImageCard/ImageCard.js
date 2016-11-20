@@ -68,7 +68,7 @@ export default class ImageCard extends Component {
         boxSizing: 'border-box',
         width: '100%',
         display: 'flex',
-        borderBottom: '1px solid #ccc',
+        borderBottom: '1px solid #ddd',
       },
       title: {
         fontSize: 18,
