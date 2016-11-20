@@ -12,6 +12,7 @@ export default class Card extends Component {
     const styles = {
       card: {
         width: 350,
+        minWidth: 350,
         height: 350,
         backgroundColor: 'white',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.25)',

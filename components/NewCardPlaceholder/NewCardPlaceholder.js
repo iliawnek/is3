@@ -58,6 +58,7 @@ export default class NewCardPlaceholder extends Component {
 
     const styles = {
       placeholder: {
+        minWidth: 350,
         width: 350,
         height: 350,
         margin: 12,
