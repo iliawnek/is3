@@ -5,6 +5,7 @@ import Button from '../Button';
 import Firebase from 'firebase';
 import {changeCardTitle, deleteCard, undoDeletion} from '../../core/reducers/projects';
 import {displayNotification, hideNotification} from '../../core/reducers/ui';
+import Lightbox from 'react-image-lightbox';
 
 @connect(state => ({user: state.auth.user}), {displayNotification, hideNotification})
 export default class ImageCard extends Component {
@@ -14,6 +15,7 @@ export default class ImageCard extends Component {
   };
 
   state = {
+    lightboxOpen: false,
     image: null,
   };
 
@@ -51,7 +53,7 @@ export default class ImageCard extends Component {
   };
 
   render() {
-    const {image} = this.state;
+    const {image, lightboxOpen} = this.state;
     const {card, user, displayNotification, hideNotification, ...otherProps} = this.props;
 
     const styles = {
@@ -92,7 +94,13 @@ export default class ImageCard extends Component {
       image: {
         objectFit: 'cover',
         width: '100%',
+        height: '100%',
+      },
+      imageContainer: {
+        width: '100%',
         height: 'calc(100% - 80px)',
+        padding: 0,
+        backgroundColor: 'transparent',
       },
     };
 
@@ -107,8 +115,6 @@ export default class ImageCard extends Component {
       </Button>
     );
 
-    console.log(image);
-
     return (
       <Card style={styles.card} {...otherProps}>
         <div style={styles.header}>
@@ -120,7 +126,21 @@ export default class ImageCard extends Component {
           />
           {closeButton}
         </div>
-        {image && <img style={styles.image} src={image}/>}
+        {image && (
+          <Button
+            style={styles.imageContainer}
+            onClick={() => this.setState({lightboxOpen: true})}
+          >
+            <img
+              style={styles.image}
+              src={image}
+            />
+          </Button>
+        )}
+        {lightboxOpen && <Lightbox
+          mainSrc={image}
+          onCloseRequest={() => this.setState({lightboxOpen: false})}
+        />}
       </Card>
     );
   }
